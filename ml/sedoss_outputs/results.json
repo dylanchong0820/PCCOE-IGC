@@ -1,0 +1,128 @@
+{
+  "synthetic_data": false,
+  "site": {
+    "lat": 1.85,
+    "lon": 102.93
+  },
+  "data_range": [
+    "2015-01-01",
+    "2024-12-31"
+  ],
+  "split": {
+    "model1_train_end": "2021-01-01",
+    "model2_train": [
+      "2021-01-02",
+      "2022-12-31"
+    ],
+    "test": [
+      "2023-01-01",
+      "2024-12-30"
+    ]
+  },
+  "stage1_et0_forecast_test": {
+    "XGBoost": {
+      "R2": 0.12280201445873651,
+      "RMSE": 0.7011225964858246,
+      "MAE": 0.5734251945025483
+    },
+    "Ridge (linear baseline)": {
+      "R2": 0.03326123497626854,
+      "RMSE": 0.7360371214563634,
+      "MAE": 0.5800990045862834
+    },
+    "Persistence (tomorrow = today)": {
+      "R2": -0.4231856471341906,
+      "RMSE": 0.8930503170679124,
+      "MAE": 0.6688814662696713
+    }
+  },
+  "stage2_soil_drying_SIMULATED_test": {
+    "XGBoost": {
+      "R2": 0.8264966062676218,
+      "RMSE": 1.3910624705010504,
+      "MAE": 0.766346446702541
+    },
+    "Ridge (linear baseline)": {
+      "R2": 0.067026793228665,
+      "RMSE": 3.2257242032884994,
+      "MAE": 1.9990075657595936
+    },
+    "Persistence (yesterday's change)": {
+      "R2": -0.7894126218006716,
+      "RMSE": 4.467328562713205,
+      "MAE": 2.3474189870711277
+    }
+  },
+  "pid_metrics": {
+    "overshoot_pct_first_step": 12.054296465241173,
+    "settle_s_first_step": 39,
+    "recovery_s_after_FDI_drift": 18,
+    "settle_s_heatwave_setpoint": 34,
+    "band_dS_m": 0.04
+  },
+  "assumptions": {
+    "TAW_MM": 100.0,
+    "P_DEPLETION": 0.5,
+    "KC": 0.9,
+    "RAIN_EFF": 0.8,
+    "RAIN_SKIP_MM": 10.0,
+    "HEAT_TMAX_C": 34.0,
+    "FERT_EC_INC": 0.8
+  },
+  "decision_demo": {
+    "wettest forecast day": {
+      "date": "2023-08-12",
+      "inputs": {
+        "soil_water_mm": 98.1,
+        "pred_delta_mm": 2.86,
+        "rain_forecast_mm": 279.1,
+        "tmax_forecast_C": 29.3
+      },
+      "recipe": {
+        "irrigate": false,
+        "volume_mm": 0.0,
+        "fertigate": false,
+        "venturi_dose_factor": 0.0,
+        "ec_setpoint_dS_m": 0.4,
+        "timing": "n/a",
+        "reason": "RAIN DELAY: forecast 279.1 mm >= 10.0 mm -> suppress irrigation + fertilizer (no N-P-K runoff)"
+      }
+    },
+    "hottest forecast day": {
+      "date": "2024-05-13",
+      "inputs": {
+        "soil_water_mm": 98.1,
+        "pred_delta_mm": 2.25,
+        "rain_forecast_mm": 7.6,
+        "tmax_forecast_C": 35.4
+      },
+      "recipe": {
+        "irrigate": false,
+        "volume_mm": 0.0,
+        "fertigate": false,
+        "venturi_dose_factor": 0.0,
+        "ec_setpoint_dS_m": 0.4,
+        "timing": "n/a",
+        "reason": "Projected soil water 100 mm is above the stress threshold 50 mm -> no irrigation needed"
+      }
+    },
+    "driest soil day": {
+      "date": "2024-03-25",
+      "inputs": {
+        "soil_water_mm": 63.1,
+        "pred_delta_mm": 20.29,
+        "rain_forecast_mm": 49.5,
+        "tmax_forecast_C": 32.8
+      },
+      "recipe": {
+        "irrigate": false,
+        "volume_mm": 0.0,
+        "fertigate": false,
+        "venturi_dose_factor": 0.0,
+        "ec_setpoint_dS_m": 0.4,
+        "timing": "n/a",
+        "reason": "RAIN DELAY: forecast 49.5 mm >= 10.0 mm -> suppress irrigation + fertilizer (no N-P-K runoff)"
+      }
+    }
+  }
+}
