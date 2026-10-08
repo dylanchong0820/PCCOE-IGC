@@ -1,0 +1,8 @@
+{
+  "_note": "EXAMPLE VALUES ONLY - replace with real sensor readings and a real forecast",
+  "date": "2026-10-08",
+  "soil_water_mm": 52.0,
+  "outlet_ec_dS_m": 0.42,
+  "forecast_today": {"tmax": 35.5, "tmin": 24.5, "rh": 70, "u2": 1.5, "rs": 22.0, "rain": 0.0},
+  "fertigation_due": true
+}

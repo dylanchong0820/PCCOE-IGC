@@ -1,3 +1,6 @@
 __pycache__/
 .DS_Store
 sedoss_outputs/nasa_power_cache.csv
+ml/sedoss_outputs/cache/
+__pycache__/
+.DS_Store

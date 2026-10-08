@@ -1,6 +1,7 @@
 xgboost
-pandas
 scikit-learn
+pandas
 numpy
 matplotlib
 requests
+pyyaml
