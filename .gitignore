@@ -1,7 +1,3 @@
 __pycache__/
-*.py[cod]
-.venv/
-venv/
-.vscode/
 .DS_Store
-Thumbs.db
+sedoss_outputs/nasa_power_cache.csv
