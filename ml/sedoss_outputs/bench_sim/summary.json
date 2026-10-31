@@ -1,0 +1,29 @@
+{
+  "_note": "SIMULATED bench. Physical constants in config/bench.yaml are placeholders.",
+  "site": "Batu Pahat, Johor",
+  "replay": [
+    "2019-01-20",
+    "2019-03-20"
+  ],
+  "days": 60,
+  "irrigation_days": 11,
+  "water_delivered_l": 41.36,
+  "rain_mm": 80.8,
+  "stress_days_true": 1,
+  "treated_water_l": 41.1,
+  "diverted_to_brine_l": 9.9,
+  "fdi_regenerations": 11,
+  "salt_recovered_g": 56.3,
+  "dosing": {
+    "deliveries_with_fertilizer": 11,
+    "mean_abs_ec_error_dS_m": 0.0,
+    "mean_settle_s": 42.2
+  },
+  "alarms": [],
+  "warnings": [
+    "Interlock: EC setpoint 1.03 dS/m is above the crop-safe limit 0.78 dS/m (0.5 ppt) - capped",
+    "Interlock: EC setpoint 1.04 dS/m is above the crop-safe limit 0.78 dS/m (0.5 ppt) - capped",
+    "Interlock: EC setpoint 1.05 dS/m is above the crop-safe limit 0.78 dS/m (0.5 ppt) - capped",
+    "Interlock: EC setpoint 1.20 dS/m is above the crop-safe limit 0.78 dS/m (0.5 ppt) - capped"
+  ]
+}

@@ -680,6 +680,7 @@ def run_pipeline(df, cfg, P, seed, out: Path, full: bool):
     nowcast_models["T + radiation"].save_model(str(mdir / "et0_nowcast_T_radiation_xgb.json"))
     m2.save_model(str(mdir / "soil_drying_xgb.json"))
     (mdir / "meta.json").write_text(json.dumps({
+        "site": cfg["site"],
         "params": dataclasses.asdict(P), "et0_forecast_cols": all_cols, "soil_cols": SOIL_COLS,
         "heat_tmax_c": P.heat_tmax, "trained_on": f"{df.index[0].date()}..{df.index[-1].date()}"}, indent=2))
 

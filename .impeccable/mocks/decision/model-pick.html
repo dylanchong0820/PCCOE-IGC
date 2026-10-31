@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;font-family:Archivo,sans-serif;background:#fbfbf8;color:#1a1a1a;display:grid;grid-template-columns:220px 520px 1fr}
+.rail{border-right:2px solid #1a1a1a;padding:26px 20px;display:flex;flex-direction:column;gap:22px}
+.mark{font-weight:900;font-size:20px;letter-spacing:.05em}.mark span{color:#c62828}
+.rail a{display:block;padding:8px 0;font-size:15px;color:#1a1a1a;text-decoration:none;border-bottom:1px solid #ddd}
+.rail a.on{color:#c62828;font-weight:700}
+.sites{font-size:13px;color:#555;margin-top:auto}.sites b{display:block;color:#1a1a1a}
+.leaf{background:#fff;border-right:1px solid #ddd;padding:26px 34px;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#c62828;border-bottom:2px solid #c62828;padding-bottom:8px}
+.num{font-size:300px;font-weight:900;font-stretch:70%;line-height:.9;color:#c62828;text-align:center;margin:18px 0 6px}
+.day{text-align:center;font-size:20px;font-weight:700}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:22px;border-top:2px solid #1a1a1a}
+.cols div{padding:14px 12px}.cols div+div{border-left:1px solid #ccc}
+.cols h3{font-size:30px;font-weight:900}.do h3{color:#2e7d32}.avoid h3{color:#c62828}
+.cols p{font-size:16px;margin-top:8px;line-height:1.35}
+main{padding:26px 30px;display:grid;grid-template-rows:auto auto auto 1fr;gap:16px}
+h2{font-size:13px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #1a1a1a;padding-bottom:6px}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.k{border:1px solid #ccc;background:#fff;padding:14px}.k small{font-size:12px;color:#555}.k b{display:block;font-size:34px;font-stretch:80%;font-variant-numeric:tabular-nums}
+.alert{border:2px solid #c62828;padding:10px 14px;font-size:14px}
+.ctl{display:flex;gap:10px}button{font:inherit;font-size:15px;padding:12px 16px;border:2px solid #1a1a1a;background:#fff}button.p{background:#1a1a1a;color:#fff}
+</style></head><body>
+<aside class="rail"><div class="mark">S.E.D.O.S.S<span>.</span></div>
+<nav><a class="on">Today</a><a>Bench</a><a>Sites</a><a>History</a><a>Alerts</a></nav>
+<div class="sites"><b>Batu Pahat, Johor</b>trained site · 1.85°N 102.93°E</div></aside>
+<section class="leaf"><div class="top"><span>FEBRUARY 2019</span><span>TUESDAY</span></div>
+<div class="num">12</div><div class="day">Decision at 05:00 · soil 49 mm</div>
+<div class="cols"><div class="do"><h3>Do</h3><p>Irrigate 15 mm (3.8 L) at 07:00<br>Add A/B nutrients to EC 0.78</p></div>
+<div class="avoid"><h3>Avoid</h3><p>Dosing above 0.78 dS/m<br>No rain delay needed (0.4 mm)</p></div></div></section>
+<main><h2>Bench now · simulated</h2>
+<div class="row"><div class="k"><small>Feed EC</small><b>2.00</b></div><div class="k"><small>After FDI</small><b>0.14</b></div><div class="k"><small>Final EC</small><b>0.78</b></div></div>
+<div class="row"><div class="k"><small>Clean buffer</small><b>9.8 L</b></div><div class="k"><small>Brine</small><b>0.6 L</b></div><div class="k"><small>Salt recovered</small><b>20.3 g</b></div></div>
+<div style="display:grid;gap:14px;align-content:start"><div class="alert">Safety cap: AI asked for EC 1.20; held at crop-safe 0.78 dS/m.</div>
+<div class="ctl"><button class="p">Irrigate now</button><button>Water only</button><button>Skip today</button><button>Pause</button></div></div></main>
+</body></html>

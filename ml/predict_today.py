@@ -12,9 +12,12 @@ JSON, or import and call `recommend()` directly.
 Usage
 -----
   python3 predict_today.py \
-      --models sedoss_outputs/models \
+      --site raub \
       --history examples/recent_weather_example.csv \
       --readings examples/readings_example.json
+
+  Instead of --site: --lat 3.8 --lon 101.9 picks the nearest trained site (see train_sites.py),
+  or --models <folder> uses a model folder directly.
 
 INPUT 1 - history CSV: observed DAILY weather for the last >= 10 days, ending YESTERDAY
   columns: date,tmax,tmin,rh,u2,rs,rain
@@ -119,22 +122,48 @@ def recommend(history: pd.DataFrame, readings: dict, meta: dict, m_fc, m2):
 
 def main():
     ap = argparse.ArgumentParser(description="S.E.D.O.S.S. daily recommendation")
-    ap.add_argument("--models", default="sedoss_outputs/models")
+    where = ap.add_mutually_exclusive_group()
+    where.add_argument("--site", help="trained site id from sedoss_outputs/sites/index.json")
+    where.add_argument("--lat", type=float, help="orchard latitude (uses the nearest trained site; needs --lon)")
+    where.add_argument("--models", help="model folder to use directly (default: sedoss_outputs/models)")
+    ap.add_argument("--lon", type=float, help="orchard longitude (with --lat)")
     ap.add_argument("--history", required=True)
     ap.add_argument("--readings", required=True)
     ap.add_argument("--json", action="store_true", help="print JSON only")
     args = ap.parse_args()
+    if (args.lat is None) != (args.lon is None):
+        ap.error("--lat and --lon go together")
 
-    meta, m_fc, m2 = load_models(Path(args.models))
+    site_info = None
+    if args.site or args.lat is not None:
+        from sites import get_site, load_index, nearest_site
+        index = load_index()
+        if args.site:
+            site, dist, far = get_site(args.site, index), 0.0, False
+        else:
+            site, dist, far = nearest_site(args.lat, args.lon, index)
+        model_dir = Path(__file__).parent / site["models_dir"]
+        site_info = {"id": site["id"], "name": site["name"], "distance_km": round(dist, 1),
+                     "beyond_trained_area": far}
+    else:
+        model_dir = Path(args.models or "sedoss_outputs/models")
+
+    meta, m_fc, m2 = load_models(model_dir)
     history = pd.read_csv(args.history, parse_dates=["date"]).set_index("date")
     readings = json.loads(Path(args.readings).read_text())
     out = recommend(history, readings, meta, m_fc, m2)
+    if site_info:
+        out = {"site": site_info, **out}
 
     if args.json:
         print(json.dumps(out, indent=2))
         return
     r, mo, si = out["recipe"], out["model_outputs"], out["sensor_and_forecast_inputs"]
     print(f"\nS.E.D.O.S.S. recommendation for {out['date']}")
+    if site_info:
+        print(f"  Trained site used        : {site_info['name']} ({site_info['distance_km']} km away)")
+        if site_info["beyond_trained_area"]:
+            print("    WARNING: orchard is far from every trained site - add a site for it and retrain")
     print(f"  Soil water now           : {si['soil_water_mm']} mm")
     print(f"  Forecast rain / Tmax     : {si['rain_forecast_mm']} mm / {si['tmax_forecast_C']} C")
     print(f"  Model: crop water demand : {mo['forecast_et0_mm_per_day']} mm/day (ET0)")

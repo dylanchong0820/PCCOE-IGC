@@ -1,0 +1,1036 @@
+{
+  "synthetic_data": false,
+  "config_used": {
+    "site": {
+      "name": "Gua Musang, Kelantan",
+      "latitude": 4.88,
+      "longitude": 101.97,
+      "elevation_m": 100,
+      "id": "gua_musang"
+    },
+    "data": {
+      "start": "20150101",
+      "end": "20241231"
+    },
+    "soil_crop": {
+      "taw_mm": 100.0,
+      "p_depletion": 0.5,
+      "kc": 0.9,
+      "rain_eff": 0.8,
+      "vwc_field_capacity": 0.3,
+      "vwc_wilting_point": 0.15
+    },
+    "water_quality": {
+      "base_ec_dS_m": 0.4,
+      "ec_to_ppt": 0.64,
+      "crop_safe_limit_ppt": 0.5
+    },
+    "fertigation": {
+      "fert_ec_increase_dS_m": 0.8,
+      "fertigate_every_n_irrigations": 1
+    },
+    "irrigation": {
+      "max_irrig_mm": 15.0,
+      "fixed_timer_every_n_days": 2,
+      "fixed_timer_amount_mm": 7.0
+    },
+    "policy": {
+      "rain_skip_mm": 10.0,
+      "heat_tmax_c": "auto",
+      "heat_percentile": 0.9
+    },
+    "forecast_error": {
+      "tmax_sd_c": 1.0,
+      "tmin_sd_c": 0.8,
+      "rh_sd_pct": 5.0,
+      "u2_rel_sd": 0.25,
+      "rs_rel_sd": 0.15,
+      "rain_lognorm_sigma": 0.3,
+      "rain_false_alarm_prob": 0.05
+    },
+    "simulator": {
+      "initial_fraction": 0.7,
+      "irrigation_trigger_range": [
+        0.25,
+        0.8
+      ],
+      "irrigation_amount_range_mm": [
+        8.0,
+        20.0
+      ],
+      "sensor_noise_mm": 1.0
+    },
+    "pid": {
+      "plant_gain_dS_m": 2.0,
+      "tau_s": 15.0,
+      "delay_s": 5,
+      "kp": 0.8,
+      "ki": 0.04,
+      "kd": 0.0,
+      "fdi_drift_dS_m": 0.2
+    },
+    "experiments": {
+      "extra_seeds": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "driest_window_days": 90,
+      "sensitivity_world": {
+        "kc": [
+          0.7,
+          0.8,
+          0.9,
+          1.0,
+          1.1
+        ],
+        "taw_mm": [
+          60,
+          80,
+          100,
+          120,
+          140
+        ],
+        "rain_eff": [
+          0.6,
+          0.8,
+          1.0
+        ]
+      },
+      "sensitivity_policy": {
+        "rain_skip_mm": [
+          5,
+          10,
+          20
+        ],
+        "heat_percentile": [
+          0.8,
+          0.9,
+          0.95
+        ]
+      },
+      "forecast_error_scales": [
+        0.0,
+        0.5,
+        1.0,
+        2.0,
+        4.0
+      ]
+    }
+  },
+  "heat_tmax_c_used": 29.73,
+  "config_warnings": [
+    "EC SAFETY: full-dose EC 1.20 dS/m = ~0.77 ppt exceeds the crop-safe limit 0.5 ppt. Lower fert_ec_increase_dS_m or base EC, or justify why fertiliser ions are less harmful than NaCl (with a source)."
+  ],
+  "data_range": [
+    "2015-01-01",
+    "2024-12-31"
+  ],
+  "results_primary_seed": {
+    "seed": 42,
+    "task_A_nowcast_reduced_sensors": {
+      "XGBoost - T only (Tmax,Tmin)": {
+        "R2": 0.50108514504263,
+        "RMSE": 0.4367611116801465,
+        "MAE": 0.33471111559126826
+      },
+      "Ridge - T only (Tmax,Tmin)": {
+        "R2": 0.5195929003637259,
+        "RMSE": 0.42858350642399257,
+        "MAE": 0.33094496573556975
+      },
+      "XGBoost - T + radiation": {
+        "R2": 0.9976878674507853,
+        "RMSE": 0.029732888961935693,
+        "MAE": 0.02029742136688633
+      },
+      "Ridge - T + radiation": {
+        "R2": 0.9969043389530081,
+        "RMSE": 0.03440388176100683,
+        "MAE": 0.028746768148595857
+      },
+      "Hargreaves (uncalibrated, T only)": {
+        "R2": 0.2715513634746437,
+        "RMSE": 0.5277523946476402,
+        "MAE": 0.4111408579778047
+      }
+    },
+    "task_B_forecast_tomorrow_et0": {
+      "XGBoost - observations only": {
+        "R2": 0.46349030378359846,
+        "RMSE": 0.45289349907889526,
+        "MAE": 0.3519917793276655
+      },
+      "XGBoost - with (simulated) weather forecast": {
+        "R2": 0.7797545378047919,
+        "RMSE": 0.29017552827278964,
+        "MAE": 0.2297803964744394
+      },
+      "Ridge - with (simulated) weather forecast": {
+        "R2": 0.7470125594881594,
+        "RMSE": 0.310997415418732,
+        "MAE": 0.25124463706269917
+      },
+      "Persistence (tomorrow = today)": {
+        "R2": 0.18093465516576634,
+        "RMSE": 0.5595856573975394,
+        "MAE": 0.4302720500835379
+      }
+    },
+    "task_B_forecast_error_curve": {
+      "0.0": {
+        "R2": 0.9973654153557158,
+        "RMSE": 0.031736817701745,
+        "MAE": 0.02269659213797718
+      },
+      "0.5": {
+        "R2": 0.905214978992747,
+        "RMSE": 0.19036063922582572,
+        "MAE": 0.1530170156410634
+      },
+      "1.0": {
+        "R2": 0.7797545378047919,
+        "RMSE": 0.29017552827278964,
+        "MAE": 0.2297803964744394
+      },
+      "2.0": {
+        "R2": 0.6386162515084114,
+        "RMSE": 0.371699184542468,
+        "MAE": 0.2925202834723484
+      },
+      "4.0": {
+        "R2": 0.5400265305367606,
+        "RMSE": 0.4193471450366528,
+        "MAE": 0.32532175886371895
+      }
+    },
+    "stage2_soil_drying_SIMULATED": {
+      "XGBoost": {
+        "R2": 0.8063417108864561,
+        "RMSE": 1.347321276454608,
+        "MAE": 0.7261531718079066
+      },
+      "Ridge": {
+        "R2": 0.2002200790454638,
+        "RMSE": 2.7380310638460927,
+        "MAE": 1.9295813347960145
+      },
+      "Persistence (yesterday's change)": {
+        "R2": -0.41974803549867623,
+        "RMSE": 3.6480330220814903,
+        "MAE": 2.1362418873752174
+      }
+    },
+    "policy_comparison_SIMULATED": {
+      "full_test_period": {
+        "fixed": {
+          "irrigation_mm": 2562.0,
+          "irrigation_events": 366,
+          "stress_days": 0,
+          "drainage_mm": 5637.649144470944,
+          "fertiliser_units": 2562.0,
+          "fertiliser_on_heavy_rain_days": 609.0,
+          "rain_delay_days": 0,
+          "heat_dilution_days": 0,
+          "days": 731
+        },
+        "reactive": {
+          "irrigation_mm": 330.0,
+          "irrigation_events": 22,
+          "stress_days": 20,
+          "drainage_mm": 3410.758700104691,
+          "fertiliser_units": 255.0,
+          "fertiliser_on_heavy_rain_days": 0.0,
+          "rain_delay_days": 174,
+          "heat_dilution_days": 10,
+          "days": 731
+        },
+        "ai": {
+          "irrigation_mm": 330.0,
+          "irrigation_events": 22,
+          "stress_days": 6,
+          "drainage_mm": 3408.6247430393287,
+          "fertiliser_units": 262.5,
+          "fertiliser_on_heavy_rain_days": 0.0,
+          "rain_delay_days": 174,
+          "heat_dilution_days": 9,
+          "days": 731
+        }
+      },
+      "driest_90_days": {
+        "fixed": {
+          "irrigation_mm": 315.0,
+          "irrigation_events": 45,
+          "stress_days": 0,
+          "drainage_mm": 116.08346969812433,
+          "fertiliser_units": 315.0,
+          "fertiliser_on_heavy_rain_days": 14.0,
+          "rain_delay_days": 0,
+          "heat_dilution_days": 0,
+          "days": 90
+        },
+        "reactive": {
+          "irrigation_mm": 165.0,
+          "irrigation_events": 11,
+          "stress_days": 12,
+          "drainage_mm": 0.0,
+          "fertiliser_units": 120.0,
+          "fertiliser_on_heavy_rain_days": 0.0,
+          "rain_delay_days": 3,
+          "heat_dilution_days": 6,
+          "days": 90
+        },
+        "ai": {
+          "irrigation_mm": 165.0,
+          "irrigation_events": 11,
+          "stress_days": 3,
+          "drainage_mm": 0.0,
+          "fertiliser_units": 142.5,
+          "fertiliser_on_heavy_rain_days": 0.0,
+          "rain_delay_days": 3,
+          "heat_dilution_days": 3,
+          "days": 90
+        }
+      },
+      "driest_window": [
+        "2024-02-02",
+        "2024-05-01"
+      ]
+    },
+    "decision_demo": {
+      "irrigate": {
+        "date": "2024-03-29",
+        "inputs": {
+          "soil_water_mm": 50.4,
+          "pred_change_mm": -2.74,
+          "rain_forecast_mm": 0.9,
+          "tmax_forecast_C": 28.6
+        },
+        "recipe": {
+          "scenario": "irrigate",
+          "irrigate": true,
+          "volume_mm": 15.0,
+          "fertigate": true,
+          "venturi_dose_factor": 1.0,
+          "timing": "morning",
+          "reason": "Projected soil water 48 mm < stress threshold 50 mm -> irrigate",
+          "ec_setpoint_dS_m": 1.2,
+          "final_ec_ppt_est": 0.77,
+          "within_crop_ec_limit": false
+        }
+      },
+      "irrigate_heatwave": {
+        "date": "2024-04-01",
+        "inputs": {
+          "soil_water_mm": 45.9,
+          "pred_change_mm": -2.9,
+          "rain_forecast_mm": 0.9,
+          "tmax_forecast_C": 30.3
+        },
+        "recipe": {
+          "scenario": "irrigate_heatwave",
+          "irrigate": true,
+          "volume_mm": 15.0,
+          "fertigate": true,
+          "venturi_dose_factor": 0.5,
+          "timing": "evening",
+          "reason": "Projected soil water 43 mm < stress threshold 50 mm -> irrigate; HEATWAVE (Tmax 30.3 C >= 29.7): evening irrigation, halve Venturi dose",
+          "ec_setpoint_dS_m": 0.8,
+          "final_ec_ppt_est": 0.51,
+          "within_crop_ec_limit": false
+        }
+      },
+      "rain_delay": {
+        "date": "2023-12-11",
+        "inputs": {
+          "soil_water_mm": 99.9,
+          "pred_change_mm": -0.11,
+          "rain_forecast_mm": 21.2,
+          "tmax_forecast_C": 25.0
+        },
+        "recipe": {
+          "scenario": "rain_delay",
+          "irrigate": false,
+          "volume_mm": 0.0,
+          "fertigate": false,
+          "venturi_dose_factor": 0.0,
+          "timing": "n/a",
+          "reason": "RAIN DELAY: forecast 21.2 mm >= 10.0 mm -> suppress irrigation and fertiliser (no N-P-K runoff)",
+          "ec_setpoint_dS_m": 0.4,
+          "final_ec_ppt_est": 0.26,
+          "within_crop_ec_limit": true
+        }
+      },
+      "no_irrigation_needed": {
+        "date": "2024-01-08",
+        "inputs": {
+          "soil_water_mm": 100.1,
+          "pred_change_mm": -0.04,
+          "rain_forecast_mm": 5.6,
+          "tmax_forecast_C": 27.6
+        },
+        "recipe": {
+          "scenario": "no_irrigation_needed",
+          "irrigate": false,
+          "volume_mm": 0.0,
+          "fertigate": false,
+          "venturi_dose_factor": 0.0,
+          "timing": "n/a",
+          "reason": "Projected soil water 100 mm >= stress threshold 50 mm -> no irrigation needed",
+          "ec_setpoint_dS_m": 0.4,
+          "final_ec_ppt_est": 0.26,
+          "within_crop_ec_limit": true
+        }
+      }
+    },
+    "scenario_day_counts_test": {
+      "no_irrigation_needed": 533,
+      "rain_delay": 174,
+      "irrigate_heatwave": 10,
+      "irrigate": 14
+    },
+    "pid_SIMULATED": {
+      "overshoot_pct_first_step": 1.1044993067215456,
+      "settle_s_first_step": 42,
+      "recovery_s_after_FDI_drift": 26,
+      "settle_s_heatwave_setpoint": 42,
+      "band_dS_m": 0.04000000000000001
+    },
+    "sensitivity_world_SIMULATED": [
+      {
+        "param": "kc",
+        "true_value": 0.7,
+        "policy": "fixed",
+        "irrigation_mm": 2562.0,
+        "irrigation_events": 366,
+        "stress_days": 0,
+        "drainage_mm": 6137.512001255178,
+        "fertiliser_units": 2562.0,
+        "fertiliser_on_heavy_rain_days": 609.0,
+        "rain_delay_days": 0,
+        "heat_dilution_days": 0,
+        "days": 731
+      },
+      {
+        "param": "kc",
+        "true_value": 0.7,
+        "policy": "reactive",
+        "irrigation_mm": 180.0,
+        "irrigation_events": 12,
+        "stress_days": 11,
+        "drainage_mm": 3758.086401476675,
+        "fertiliser_units": 150.0,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 4,
+        "days": 731
+      },
+      {
+        "param": "kc",
+        "true_value": 0.7,
+        "policy": "ai",
+        "irrigation_mm": 180.0,
+        "irrigation_events": 12,
+        "stress_days": 0,
+        "drainage_mm": 3757.4047214767934,
+        "fertiliser_units": 135.0,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 6,
+        "days": 731
+      },
+      {
+        "param": "kc",
+        "true_value": 0.8,
+        "policy": "fixed",
+        "irrigation_mm": 2562.0,
+        "irrigation_events": 366,
+        "stress_days": 0,
+        "drainage_mm": 5887.58057286306,
+        "fertiliser_units": 2562.0,
+        "fertiliser_on_heavy_rain_days": 609.0,
+        "rain_delay_days": 0,
+        "heat_dilution_days": 0,
+        "days": 731
+      },
+      {
+        "param": "kc",
+        "true_value": 0.8,
+        "policy": "reactive",
+        "irrigation_mm": 255.0,
+        "irrigation_events": 17,
+        "stress_days": 15,
+        "drainage_mm": 3584.3733067043463,
+        "fertiliser_units": 187.5,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 9,
+        "days": 731
+      },
+      {
+        "param": "kc",
+        "true_value": 0.8,
+        "policy": "ai",
+        "irrigation_mm": 255.0,
+        "irrigation_events": 17,
+        "stress_days": 2,
+        "drainage_mm": 3582.8337640102313,
+        "fertiliser_units": 187.5,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 9,
+        "days": 731
+      },
+      {
+        "param": "kc",
+        "true_value": 0.9,
+        "policy": "fixed",
+        "irrigation_mm": 2562.0,
+        "irrigation_events": 366,
+        "stress_days": 0,
+        "drainage_mm": 5637.649144470944,
+        "fertiliser_units": 2562.0,
+        "fertiliser_on_heavy_rain_days": 609.0,
+        "rain_delay_days": 0,
+        "heat_dilution_days": 0,
+        "days": 731
+      },
+      {
+        "param": "kc",
+        "true_value": 0.9,
+        "policy": "reactive",
+        "irrigation_mm": 330.0,
+        "irrigation_events": 22,
+        "stress_days": 20,
+        "drainage_mm": 3410.758700104691,
+        "fertiliser_units": 255.0,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 10,
+        "days": 731
+      },
+      {
+        "param": "kc",
+        "true_value": 0.9,
+        "policy": "ai",
+        "irrigation_mm": 330.0,
+        "irrigation_events": 22,
+        "stress_days": 6,
+        "drainage_mm": 3408.6247430393287,
+        "fertiliser_units": 262.5,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 9,
+        "days": 731
+      },
+      {
+        "param": "kc",
+        "true_value": 1.0,
+        "policy": "fixed",
+        "irrigation_mm": 2562.0,
+        "irrigation_events": 366,
+        "stress_days": 0,
+        "drainage_mm": 5387.717716078827,
+        "fertiliser_units": 2562.0,
+        "fertiliser_on_heavy_rain_days": 609.0,
+        "rain_delay_days": 0,
+        "heat_dilution_days": 0,
+        "days": 731
+      },
+      {
+        "param": "kc",
+        "true_value": 1.0,
+        "policy": "reactive",
+        "irrigation_mm": 405.0,
+        "irrigation_events": 27,
+        "stress_days": 26,
+        "drainage_mm": 3236.5824176333194,
+        "fertiliser_units": 345.0,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 8,
+        "days": 731
+      },
+      {
+        "param": "kc",
+        "true_value": 1.0,
+        "policy": "ai",
+        "irrigation_mm": 405.0,
+        "irrigation_events": 27,
+        "stress_days": 10,
+        "drainage_mm": 3234.465638143721,
+        "fertiliser_units": 330.0,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 10,
+        "days": 731
+      },
+      {
+        "param": "kc",
+        "true_value": 1.1,
+        "policy": "fixed",
+        "irrigation_mm": 2562.0,
+        "irrigation_events": 366,
+        "stress_days": 0,
+        "drainage_mm": 5137.786287686708,
+        "fertiliser_units": 2562.0,
+        "fertiliser_on_heavy_rain_days": 609.0,
+        "rain_delay_days": 0,
+        "heat_dilution_days": 0,
+        "days": 731
+      },
+      {
+        "param": "kc",
+        "true_value": 1.1,
+        "policy": "reactive",
+        "irrigation_mm": 495.0,
+        "irrigation_events": 33,
+        "stress_days": 33,
+        "drainage_mm": 3079.3915167257705,
+        "fertiliser_units": 405.0,
+        "fertiliser_on_heavy_rain_days": 15.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 12,
+        "days": 731
+      },
+      {
+        "param": "kc",
+        "true_value": 1.1,
+        "policy": "ai",
+        "irrigation_mm": 495.0,
+        "irrigation_events": 33,
+        "stress_days": 11,
+        "drainage_mm": 3074.853304265762,
+        "fertiliser_units": 390.0,
+        "fertiliser_on_heavy_rain_days": 15.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 14,
+        "days": 731
+      },
+      {
+        "param": "taw_mm",
+        "true_value": 60,
+        "policy": "fixed",
+        "irrigation_mm": 2562.0,
+        "irrigation_events": 366,
+        "stress_days": 0,
+        "drainage_mm": 5649.6491444709445,
+        "fertiliser_units": 2562.0,
+        "fertiliser_on_heavy_rain_days": 609.0,
+        "rain_delay_days": 0,
+        "heat_dilution_days": 0,
+        "days": 731
+      },
+      {
+        "param": "taw_mm",
+        "true_value": 60,
+        "policy": "reactive",
+        "irrigation_mm": 720.0,
+        "irrigation_events": 48,
+        "stress_days": 0,
+        "drainage_mm": 3810.153499041592,
+        "fertiliser_units": 630.0,
+        "fertiliser_on_heavy_rain_days": 15.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 12,
+        "days": 731
+      },
+      {
+        "param": "taw_mm",
+        "true_value": 60,
+        "policy": "ai",
+        "irrigation_mm": 885.0,
+        "irrigation_events": 59,
+        "stress_days": 0,
+        "drainage_mm": 3975.1534990415917,
+        "fertiliser_units": 712.5,
+        "fertiliser_on_heavy_rain_days": 15.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 23,
+        "days": 731
+      },
+      {
+        "param": "taw_mm",
+        "true_value": 80,
+        "policy": "fixed",
+        "irrigation_mm": 2562.0,
+        "irrigation_events": 366,
+        "stress_days": 0,
+        "drainage_mm": 5643.649144470944,
+        "fertiliser_units": 2562.0,
+        "fertiliser_on_heavy_rain_days": 609.0,
+        "rain_delay_days": 0,
+        "heat_dilution_days": 0,
+        "days": 731
+      },
+      {
+        "param": "taw_mm",
+        "true_value": 80,
+        "policy": "reactive",
+        "irrigation_mm": 390.0,
+        "irrigation_events": 26,
+        "stress_days": 0,
+        "drainage_mm": 3474.153499041591,
+        "fertiliser_units": 315.0,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 10,
+        "days": 731
+      },
+      {
+        "param": "taw_mm",
+        "true_value": 80,
+        "policy": "ai",
+        "irrigation_mm": 375.0,
+        "irrigation_events": 25,
+        "stress_days": 0,
+        "drainage_mm": 3459.153499041591,
+        "fertiliser_units": 292.5,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 11,
+        "days": 731
+      },
+      {
+        "param": "taw_mm",
+        "true_value": 100,
+        "policy": "fixed",
+        "irrigation_mm": 2562.0,
+        "irrigation_events": 366,
+        "stress_days": 0,
+        "drainage_mm": 5637.649144470944,
+        "fertiliser_units": 2562.0,
+        "fertiliser_on_heavy_rain_days": 609.0,
+        "rain_delay_days": 0,
+        "heat_dilution_days": 0,
+        "days": 731
+      },
+      {
+        "param": "taw_mm",
+        "true_value": 100,
+        "policy": "reactive",
+        "irrigation_mm": 330.0,
+        "irrigation_events": 22,
+        "stress_days": 20,
+        "drainage_mm": 3410.758700104691,
+        "fertiliser_units": 255.0,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 10,
+        "days": 731
+      },
+      {
+        "param": "taw_mm",
+        "true_value": 100,
+        "policy": "ai",
+        "irrigation_mm": 330.0,
+        "irrigation_events": 22,
+        "stress_days": 6,
+        "drainage_mm": 3408.6247430393287,
+        "fertiliser_units": 262.5,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 9,
+        "days": 731
+      },
+      {
+        "param": "taw_mm",
+        "true_value": 120,
+        "policy": "fixed",
+        "irrigation_mm": 2562.0,
+        "irrigation_events": 366,
+        "stress_days": 0,
+        "drainage_mm": 5631.6491444709445,
+        "fertiliser_units": 2562.0,
+        "fertiliser_on_heavy_rain_days": 609.0,
+        "rain_delay_days": 0,
+        "heat_dilution_days": 0,
+        "days": 731
+      },
+      {
+        "param": "taw_mm",
+        "true_value": 120,
+        "policy": "reactive",
+        "irrigation_mm": 255.0,
+        "irrigation_events": 17,
+        "stress_days": 96,
+        "drainage_mm": 3359.8480855530797,
+        "fertiliser_units": 202.5,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 7,
+        "days": 731
+      },
+      {
+        "param": "taw_mm",
+        "true_value": 120,
+        "policy": "ai",
+        "irrigation_mm": 255.0,
+        "irrigation_events": 17,
+        "stress_days": 95,
+        "drainage_mm": 3353.8164963147738,
+        "fertiliser_units": 195.0,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 8,
+        "days": 731
+      },
+      {
+        "param": "taw_mm",
+        "true_value": 140,
+        "policy": "fixed",
+        "irrigation_mm": 2562.0,
+        "irrigation_events": 366,
+        "stress_days": 0,
+        "drainage_mm": 5625.649144470944,
+        "fertiliser_units": 2562.0,
+        "fertiliser_on_heavy_rain_days": 609.0,
+        "rain_delay_days": 0,
+        "heat_dilution_days": 0,
+        "days": 731
+      },
+      {
+        "param": "taw_mm",
+        "true_value": 140,
+        "policy": "reactive",
+        "irrigation_mm": 180.0,
+        "irrigation_events": 12,
+        "stress_days": 127,
+        "drainage_mm": 3322.40133784095,
+        "fertiliser_units": 127.5,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 7,
+        "days": 731
+      },
+      {
+        "param": "taw_mm",
+        "true_value": 140,
+        "policy": "ai",
+        "irrigation_mm": 180.0,
+        "irrigation_events": 12,
+        "stress_days": 130,
+        "drainage_mm": 3314.903006198866,
+        "fertiliser_units": 142.5,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 5,
+        "days": 731
+      },
+      {
+        "param": "rain_eff",
+        "true_value": 0.6,
+        "policy": "fixed",
+        "irrigation_mm": 2562.0,
+        "irrigation_events": 366,
+        "stress_days": 0,
+        "drainage_mm": 4298.891144470944,
+        "fertiliser_units": 2562.0,
+        "fertiliser_on_heavy_rain_days": 609.0,
+        "rain_delay_days": 0,
+        "heat_dilution_days": 0,
+        "days": 731
+      },
+      {
+        "param": "rain_eff",
+        "true_value": 0.6,
+        "policy": "reactive",
+        "irrigation_mm": 405.0,
+        "irrigation_events": 27,
+        "stress_days": 29,
+        "drainage_mm": 2147.3678694817636,
+        "fertiliser_units": 315.0,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 12,
+        "days": 731
+      },
+      {
+        "param": "rain_eff",
+        "true_value": 0.6,
+        "policy": "ai",
+        "irrigation_mm": 420.0,
+        "irrigation_events": 28,
+        "stress_days": 11,
+        "drainage_mm": 2159.836635181655,
+        "fertiliser_units": 322.5,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 13,
+        "days": 731
+      },
+      {
+        "param": "rain_eff",
+        "true_value": 0.8,
+        "policy": "fixed",
+        "irrigation_mm": 2562.0,
+        "irrigation_events": 366,
+        "stress_days": 0,
+        "drainage_mm": 5637.649144470944,
+        "fertiliser_units": 2562.0,
+        "fertiliser_on_heavy_rain_days": 609.0,
+        "rain_delay_days": 0,
+        "heat_dilution_days": 0,
+        "days": 731
+      },
+      {
+        "param": "rain_eff",
+        "true_value": 0.8,
+        "policy": "reactive",
+        "irrigation_mm": 330.0,
+        "irrigation_events": 22,
+        "stress_days": 20,
+        "drainage_mm": 3410.758700104691,
+        "fertiliser_units": 255.0,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 10,
+        "days": 731
+      },
+      {
+        "param": "rain_eff",
+        "true_value": 0.8,
+        "policy": "ai",
+        "irrigation_mm": 330.0,
+        "irrigation_events": 22,
+        "stress_days": 6,
+        "drainage_mm": 3408.6247430393287,
+        "fertiliser_units": 262.5,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 9,
+        "days": 731
+      },
+      {
+        "param": "rain_eff",
+        "true_value": 1.0,
+        "policy": "fixed",
+        "irrigation_mm": 2562.0,
+        "irrigation_events": 366,
+        "stress_days": 0,
+        "drainage_mm": 6976.407144470943,
+        "fertiliser_units": 2562.0,
+        "fertiliser_on_heavy_rain_days": 609.0,
+        "rain_delay_days": 0,
+        "heat_dilution_days": 0,
+        "days": 731
+      },
+      {
+        "param": "rain_eff",
+        "true_value": 1.0,
+        "policy": "reactive",
+        "irrigation_mm": 255.0,
+        "irrigation_events": 17,
+        "stress_days": 15,
+        "drainage_mm": 4673.298949062177,
+        "fertiliser_units": 225.0,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 4,
+        "days": 731
+      },
+      {
+        "param": "rain_eff",
+        "true_value": 1.0,
+        "policy": "ai",
+        "irrigation_mm": 255.0,
+        "irrigation_events": 17,
+        "stress_days": 4,
+        "drainage_mm": 4672.170407427133,
+        "fertiliser_units": 195.0,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 8,
+        "days": 731
+      }
+    ],
+    "sensitivity_policy_thresholds_SIMULATED": [
+      {
+        "varied": "rain_skip_mm",
+        "value": 5,
+        "heat_tmax_c": 29.7,
+        "irrigation_mm": 330.0,
+        "irrigation_events": 22,
+        "stress_days": 6,
+        "drainage_mm": 3408.6247430393287,
+        "fertiliser_units": 262.5,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 290,
+        "heat_dilution_days": 9,
+        "days": 731
+      },
+      {
+        "varied": "rain_skip_mm",
+        "value": 10,
+        "heat_tmax_c": 29.7,
+        "irrigation_mm": 330.0,
+        "irrigation_events": 22,
+        "stress_days": 6,
+        "drainage_mm": 3408.6247430393287,
+        "fertiliser_units": 262.5,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 9,
+        "days": 731
+      },
+      {
+        "varied": "rain_skip_mm",
+        "value": 20,
+        "heat_tmax_c": 29.7,
+        "irrigation_mm": 330.0,
+        "irrigation_events": 22,
+        "stress_days": 6,
+        "drainage_mm": 3408.6247430393287,
+        "fertiliser_units": 262.5,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 98,
+        "heat_dilution_days": 9,
+        "days": 731
+      },
+      {
+        "varied": "heat_percentile",
+        "value": 0.8,
+        "heat_tmax_c": 29.3,
+        "irrigation_mm": 330.0,
+        "irrigation_events": 22,
+        "stress_days": 6,
+        "drainage_mm": 3408.6247430393287,
+        "fertiliser_units": 240.0,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 12,
+        "days": 731
+      },
+      {
+        "varied": "heat_percentile",
+        "value": 0.9,
+        "heat_tmax_c": 29.7,
+        "irrigation_mm": 330.0,
+        "irrigation_events": 22,
+        "stress_days": 6,
+        "drainage_mm": 3408.6247430393287,
+        "fertiliser_units": 262.5,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 9,
+        "days": 731
+      },
+      {
+        "varied": "heat_percentile",
+        "value": 0.95,
+        "heat_tmax_c": 30.2,
+        "irrigation_mm": 330.0,
+        "irrigation_events": 22,
+        "stress_days": 6,
+        "drainage_mm": 3408.6247430393287,
+        "fertiliser_units": 277.5,
+        "fertiliser_on_heavy_rain_days": 0.0,
+        "rain_delay_days": 174,
+        "heat_dilution_days": 7,
+        "days": 731
+      }
+    ]
+  },
+  "stability_across_seeds": null
+}

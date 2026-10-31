@@ -1,0 +1,7 @@
+varied,value,heat_tmax_c,irrigation_mm,irrigation_events,stress_days,drainage_mm,fertiliser_units,fertiliser_on_heavy_rain_days,rain_delay_days,heat_dilution_days,days
+rain_skip_mm,5.0,30.6,390.0,26,11,2013.4133815012879,307.5,0.0,347,11,731
+rain_skip_mm,10.0,30.6,390.0,26,10,2013.321592880879,315.0,0.0,174,10,731
+rain_skip_mm,20.0,30.6,390.0,26,10,2013.321592880879,315.0,0.0,68,10,731
+heat_percentile,0.8,30.3,390.0,26,10,2013.321592880879,285.0,0.0,174,14,731
+heat_percentile,0.9,30.6,390.0,26,10,2013.321592880879,315.0,0.0,174,10,731
+heat_percentile,0.95,30.9,390.0,26,10,2013.321592880879,337.5,0.0,174,7,731

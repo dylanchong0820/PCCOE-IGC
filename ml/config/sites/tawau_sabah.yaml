@@ -1,0 +1,8 @@
+# Added from the farmer hub. Elevation is approximate unless surveyed.
+# Only the site block is set here; everything else uses DEFAULT_CONFIG in sedoss_ml.py.
+site:
+  id: tawau_sabah
+  name: Tawau, Sabah
+  latitude: 4.25
+  longitude: 117.89
+  elevation_m: 30.0

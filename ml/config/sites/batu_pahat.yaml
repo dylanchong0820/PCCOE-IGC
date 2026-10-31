@@ -1,0 +1,9 @@
+# Coastal Johor, salinity-intrusion risk. Same point as the original default site.
+# Only the site block is set here; everything else uses DEFAULT_CONFIG in sedoss_ml.py.
+# Add a soil_crop block to override soil/crop values for this orchard once they are measured.
+site:
+  id: batu_pahat
+  name: "Batu Pahat, Johor"
+  latitude: 1.85
+  longitude: 102.93
+  elevation_m: 10   # approximate - replace with the orchard's surveyed elevation

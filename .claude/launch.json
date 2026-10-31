@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "hub",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["ml/run_bench.py", "--serve", "--speed", "600"],
+      "port": 8765
+    }
+  ]
+}

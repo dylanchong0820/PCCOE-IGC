@@ -1,0 +1,408 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-31T07:37:15.892953+00:00",
+  "title": "Design System: S.E.D.O.S.S. Hub",
+  "extensions": {
+    "colorMeta": {
+      "sheet": {
+        "role": "neutral",
+        "displayName": "Sheet",
+        "canonical": "oklch(98.7% 0.004 106.5)",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#222220",
+          "#3d3d3b",
+          "#5b5b59",
+          "#7a7a78",
+          "#9e9e9c",
+          "#c4c4c2",
+          "#eeeeed"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#222222",
+          "#3d3d3d",
+          "#5b5b5b",
+          "#7a7a7a",
+          "#9e9e9e",
+          "#c4c4c4",
+          "#eeeeee"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(21.8% 0.000 89.9)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#222222",
+          "#3d3d3d",
+          "#5b5b5b",
+          "#7a7a7a",
+          "#9e9e9e",
+          "#c4c4c4",
+          "#eeeeee"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink 2",
+        "canonical": "oklch(40.5% 0.007 95.2)",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#222220",
+          "#3e3d3a",
+          "#5c5b57",
+          "#7b7a76",
+          "#9f9e9b",
+          "#c5c4c1",
+          "#efeeec"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Ink 3",
+        "canonical": "oklch(49.2% 0.008 97.5)",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#22221f",
+          "#3e3d3a",
+          "#5c5b57",
+          "#7b7a75",
+          "#9f9e9a",
+          "#c5c4c1",
+          "#efeeec"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule",
+        "canonical": "oklch(87.8% 0.011 95.2)",
+        "tonalRamp": [
+          "#0c0b09",
+          "#22221e",
+          "#3e3d39",
+          "#5c5b55",
+          "#7c7a73",
+          "#a09e99",
+          "#c5c4bf",
+          "#efeeeb"
+        ]
+      },
+      "red": {
+        "role": "primary",
+        "displayName": "Almanac Red",
+        "canonical": "oklch(53.9% 0.194 26.7)",
+        "tonalRamp": [
+          "#220000",
+          "#470002",
+          "#750c0f",
+          "#a51f1f",
+          "#d13e39",
+          "#ed766b",
+          "#ffa79d",
+          "#ffdcd4"
+        ]
+      },
+      "red-tint": {
+        "role": "primary",
+        "displayName": "Almanac Red Tint",
+        "canonical": "oklch(95.1% 0.019 17.5)",
+        "tonalRamp": [
+          "#0e0a0a",
+          "#262020",
+          "#443a3b",
+          "#645757",
+          "#857676",
+          "#a79b9b",
+          "#cbc1c1",
+          "#f3eded"
+        ]
+      },
+      "green": {
+        "role": "secondary",
+        "displayName": "Leaf Green",
+        "canonical": "oklch(52.3% 0.135 144.2)",
+        "tonalRamp": [
+          "#001000",
+          "#052a08",
+          "#164919",
+          "#286b2c",
+          "#448d46",
+          "#75af75",
+          "#a6d2a4",
+          "#daf8d9"
+        ]
+      },
+      "green-tint": {
+        "role": "secondary",
+        "displayName": "Leaf Green Tint",
+        "canonical": "oklch(95.1% 0.017 145.4)",
+        "tonalRamp": [
+          "#090c09",
+          "#1f231f",
+          "#393f39",
+          "#565d56",
+          "#757d75",
+          "#9aa19a",
+          "#c0c6c0",
+          "#ecf0ec"
+        ]
+      },
+      "amber": {
+        "role": "tertiary",
+        "displayName": "Warning Amber",
+        "canonical": "oklch(50.8% 0.108 73.3)",
+        "tonalRamp": [
+          "#150800",
+          "#321c00",
+          "#553600",
+          "#7a510d",
+          "#9f702b",
+          "#be9763",
+          "#ddbe97",
+          "#ffebd1"
+        ]
+      },
+      "amber-tint": {
+        "role": "tertiary",
+        "displayName": "Warning Amber Tint",
+        "canonical": "oklch(96.6% 0.032 87.3)",
+        "tonalRamp": [
+          "#0d0b06",
+          "#252118",
+          "#423d30",
+          "#625a49",
+          "#827a66",
+          "#a59e8d",
+          "#c9c4b7",
+          "#f2eee5"
+        ]
+      },
+      "blue": {
+        "role": "tertiary",
+        "displayName": "Water Blue",
+        "canonical": "oklch(46.7% 0.096 243.1)",
+        "tonalRamp": [
+          "#000c19",
+          "#072438",
+          "#18415e",
+          "#2b6086",
+          "#4680ac",
+          "#76a4c9",
+          "#a6c9e6",
+          "#daf2ff"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Leaf Numeral",
+        "purpose": "The day of the month on the leaf, in red; also the offline 'No signal'."
+      },
+      "headline": {
+        "displayName": "View Title",
+        "purpose": "Titles of non-Today views."
+      },
+      "title": {
+        "displayName": "Do / Avoid",
+        "purpose": "Do and Avoid headings on the leaf."
+      },
+      "numeral": {
+        "displayName": "Reading Numeral",
+        "purpose": "Live readings in tiles and water-path stages."
+      },
+      "body-lg": {
+        "displayName": "Advice",
+        "purpose": "Do/Avoid list items."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All running text, tabular figures."
+      },
+      "label": {
+        "displayName": "Section Label",
+        "purpose": "Uppercase section heads over an ink rule."
+      },
+      "label-sm": {
+        "displayName": "Small Label",
+        "purpose": "Table heads, stage names, tags."
+      }
+    },
+    "shadows": [
+      {
+        "name": "falling-leaf",
+        "value": "0 18px 40px rgba(26, 26, 26, .18)",
+        "purpose": "Only on the leaf while it tears off and falls."
+      }
+    ],
+    "motion": [
+      {
+        "name": "tear",
+        "value": "1.05s cubic-bezier(.55, .05, .7, .2) forwards",
+        "purpose": "Old leaf rotates from its top-left and falls when the simulated day changes."
+      },
+      {
+        "name": "tear-reduced",
+        "value": "fade .3s ease-out",
+        "purpose": "Reduced-motion replacement for the tear."
+      },
+      {
+        "name": "state",
+        "value": ".15s ease-out",
+        "purpose": "Button background and colour changes."
+      },
+      {
+        "name": "fill",
+        "value": "width .6s ease-out",
+        "purpose": "Watering progress bar fill."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide-break",
+        "value": "1180px"
+      },
+      {
+        "name": "rail-collapse",
+        "value": "980px"
+      },
+      {
+        "name": "mobile",
+        "value": "640px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one committing action per control group (Irrigate now, Start watering, Confirm).",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Irrigate now</button>",
+      "css": ".ds-btn{font-family:var(--font,'Archivo','Helvetica Neue',Arial,sans-serif);font-size:15px;font-weight:600;padding:11px 16px;border:2px solid var(--ink,#1a1a1a);border-radius:0;background:var(--paper,#fff);color:var(--ink,#1a1a1a);cursor:pointer;transition:background-color .15s ease-out,color .15s ease-out}.ds-btn-primary{background:var(--ink,#1a1a1a);color:#fff}.ds-btn-primary:hover{background:#3b3c3d}.ds-btn:focus-visible{outline:2px solid var(--focus,#c62828);outline-offset:2px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Standard actions beside the primary (Water only today, Skip today, Pause unit, maintenance).",
+      "html": "<button class=\"ds-btn2\">Skip today</button> <button class=\"ds-btn2 ds-btn2-active\">Paused</button>",
+      "css": ".ds-btn2{font-family:var(--font,'Archivo','Helvetica Neue',Arial,sans-serif);font-size:15px;font-weight:600;padding:11px 16px;border:2px solid var(--ink,#1a1a1a);border-radius:0;background:var(--paper,#fff);color:var(--ink,#1a1a1a);cursor:pointer;transition:background-color .15s ease-out,color .15s ease-out}.ds-btn2:hover{background:var(--sheet,#fbfbf8)}.ds-btn2:focus-visible{outline:2px solid var(--focus,#c62828);outline-offset:2px}.ds-btn2-active{background:var(--red-tint,#fbeaea);border-color:var(--red,#c62828);color:var(--red,#c62828)}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Backing out of a form or confirmation (Cancel, Keep plan).",
+      "html": "<button class=\"ds-btn-ghost\">Keep plan</button>",
+      "css": ".ds-btn-ghost{font-family:var(--font,'Archivo','Helvetica Neue',Arial,sans-serif);font-size:15px;font-weight:600;padding:11px 8px;border:2px solid transparent;border-radius:0;background:transparent;color:var(--ink,#1a1a1a);text-decoration:underline;cursor:pointer}.ds-btn-ghost:hover{background:var(--sheet,#fbfbf8)}.ds-btn-ghost:focus-visible{outline:2px solid var(--focus,#c62828);outline-offset:2px}"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Two-state filter on the alerts log; selected inverts to ink.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip ds-chip-on\">Everything</button><button class=\"ds-chip\">Needs attention</button></div>",
+      "css": ".ds-chips{display:flex;gap:8px}.ds-chip{font-family:var(--font,'Archivo','Helvetica Neue',Arial,sans-serif);font-size:14px;padding:6px 12px;border:1px solid var(--ink,#1a1a1a);border-radius:0;background:var(--paper,#fff);color:var(--ink,#1a1a1a);cursor:pointer}.ds-chip-on{background:var(--ink,#1a1a1a);color:#fff}.ds-chip:focus-visible{outline:2px solid var(--focus,#c62828);outline-offset:2px}"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Square 1px ink field for site search and amounts.",
+      "html": "<label class=\"ds-search\">Find a trained site<input type=\"search\" placeholder=\"Type a town, e.g. Raub\"></label>",
+      "css": ".ds-search{font-family:var(--font,'Archivo','Helvetica Neue',Arial,sans-serif);display:grid;gap:6px;font-weight:600;font-size:15px;color:var(--ink,#1a1a1a)}.ds-search input{font:inherit;font-weight:400;color:var(--ink,#1a1a1a);background:var(--paper,#fff);border:1px solid var(--ink,#1a1a1a);border-radius:0;padding:7px 8px}.ds-search input:focus-visible{outline:2px solid var(--focus,#c62828);outline-offset:2px}"
+    },
+    {
+      "name": "Rail Navigation",
+      "kind": "nav",
+      "refersTo": "nav",
+      "description": "Vertical rail list with hairlines; current page and hover in red; square red count badge.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\" aria-current=\"page\">Today</a><a href=\"#\">Unit</a><a href=\"#\">Sites</a><a href=\"#\">Alerts <span class=\"ds-count\">2</span></a></nav>",
+      "css": ".ds-nav{font-family:var(--font,'Archivo','Helvetica Neue',Arial,sans-serif);width:180px}.ds-nav a{display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-size:16px;color:var(--ink,#1a1a1a);text-decoration:none;border-bottom:1px solid var(--rule,#d9d7cf)}.ds-nav a:hover{color:var(--red,#c62828)}.ds-nav a[aria-current=page]{color:var(--red,#c62828);font-weight:700}.ds-nav a:focus-visible{outline:2px solid var(--focus,#c62828);outline-offset:2px}.ds-count{min-width:22px;padding:1px 6px;background:var(--red,#c62828);color:#fff;font-size:12px;font-weight:700;text-align:center}"
+    },
+    {
+      "name": "Almanac Leaf",
+      "kind": "custom",
+      "refersTo": "leaf",
+      "description": "Signature: perforated full-height leaf with red date numeral and Do/Avoid columns.",
+      "html": "<article class=\"ds-leaf\"><header class=\"ds-leaf-top\"><span>January 2019</span><span>Thursday</span></header><p class=\"ds-leaf-num\">24</p><p class=\"ds-leaf-sub\">No watering needed</p><div class=\"ds-doavoid\"><div><h2 class=\"ds-do\">Do</h2><p>Nothing. The soil holds <b>75 mm</b> of water.</p></div><div><h2 class=\"ds-avoid\">Avoid</h2><p>Watering today: it would drain past the roots.</p></div></div></article>",
+      "css": ".ds-leaf{font-family:var(--font,'Archivo','Helvetica Neue',Arial,sans-serif);position:relative;background:var(--paper,#fff);padding:30px 34px 34px;width:420px;color:var(--ink,#1a1a1a);font-variant-numeric:tabular-nums}.ds-leaf::before{content:'';position:absolute;left:0;right:0;top:0;height:8px;background:radial-gradient(circle at 6px 0,var(--rule,#d9d7cf) 3px,transparent 3.5px) 0 0/12px 8px repeat-x}.ds-leaf-top{display:flex;justify-content:space-between;font-size:15px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--red,#c62828);border-bottom:2px solid var(--red,#c62828);padding-bottom:8px}.ds-leaf-num{margin:22px 0 10px;text-align:center;font-size:170px;font-weight:900;font-stretch:70%;line-height:.86;letter-spacing:-.02em;color:var(--red,#c62828)}.ds-leaf-sub{margin:0;text-align:center;font-size:18px;font-weight:700}.ds-doavoid{display:grid;grid-template-columns:1fr 1fr;margin-top:24px;border-top:2px solid var(--ink,#1a1a1a)}.ds-doavoid>div{padding:14px 14px 4px 0}.ds-doavoid>div+div{border-left:1px solid var(--rule,#d9d7cf);padding-left:16px}.ds-doavoid h2{margin:0;font-size:32px;font-weight:900;font-stretch:85%}.ds-doavoid p{margin:9px 0 0;font-size:17px;line-height:1.35}.ds-doavoid b{font-weight:800}.ds-do{color:var(--green,#2e7d32)}.ds-avoid{color:var(--red,#c62828)}"
+    },
+    {
+      "name": "Readings Grid",
+      "kind": "card",
+      "refersTo": "reading-tile",
+      "description": "Ink-bordered 3-up grid of live readings with condensed numerals; bad readings turn red.",
+      "html": "<div class=\"ds-readings\"><div class=\"ds-r\"><span>Raw water salt</span><b>1.98</b><small>EC dS/m</small></div><div class=\"ds-r ds-ok\"><span>After desalination</span><b>0.27</b><small>healthy</small></div><div class=\"ds-r ds-bad\"><span>Irrigation water</span><b>0.91</b><small>above limit 0.78</small></div></div>",
+      "css": ".ds-readings{font-family:var(--font,'Archivo','Helvetica Neue',Arial,sans-serif);display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--ink,#1a1a1a);background:var(--paper,#fff);color:var(--ink,#1a1a1a);font-variant-numeric:tabular-nums}.ds-r{padding:14px 16px 12px;border-right:1px solid var(--rule,#d9d7cf)}.ds-r:last-child{border-right:0}.ds-r span{display:block;font-size:13px;color:var(--ink-2,#4a4945)}.ds-r b{display:block;font-size:38px;font-weight:800;font-stretch:78%;line-height:1.1}.ds-r small{font-size:12.5px;color:var(--ink-3,#62615c)}.ds-ok small{color:var(--green,#2e7d32)}.ds-bad b,.ds-bad small{color:var(--red,#c62828)}"
+    },
+    {
+      "name": "Notice",
+      "kind": "custom",
+      "refersTo": "notice-warning",
+      "description": "Bordered warning on its own tint; alarm variant in red.",
+      "html": "<div class=\"ds-notice\"><b>14:20</b> · Clean water tank is low.</div><div class=\"ds-notice ds-alarm\"><b>14:25</b> · Irrigation water above the crop-safe limit.</div>",
+      "css": ".ds-notice{font-family:var(--font,'Archivo','Helvetica Neue',Arial,sans-serif);border:2px solid var(--amber,#8a5a00);background:var(--amber-tint,#fdf3dc);color:var(--amber,#8a5a00);padding:11px 14px;font-size:14.5px;margin-bottom:10px}.ds-notice b{color:var(--ink,#1a1a1a)}.ds-alarm{border-color:var(--red,#c62828);background:var(--red-tint,#fbeaea);color:var(--red,#c62828)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Tear-off Almanac",
+    "overview": "The hub is a wall almanac, not a dashboard. Today's decision is a full-height white leaf: the day of the month as a huge condensed red numeral, the month and weekday ruled in red above it, and two plain-language columns, Do in leaf green and Avoid in almanac red, below. Everything else (unit readings, controls, logs, maps, history) sits beside or behind that leaf on a near-white sheet, organised by ink rules and square bordered tiles the way a printed form or ledger would be.\n\nDensity is calm and printed. One heavy variable sans (Archivo) does all the work, pushed narrow and black for numerals and kept at normal width for reading. Tabular figures run throughout so measurements line up like a ledger. Colour is functional and scarce: ink on paper by default, red for the date and anything to avoid or fix, green for what to do and what is healthy, amber for warnings, blue only for water.\n\nThe one moving gesture belongs to the world: when the simulated day changes, the old leaf tears off its perforated top edge and falls away to reveal the next day. Every other state change is a short colour transition.",
+    "keyCharacteristics": [
+      "A single dominant leaf per screen carries today's decision; it is never one card among many.",
+      "Condensed black Archivo numerals for figures, normal-width Archivo for words, tabular figures everywhere.",
+      "Square corners everywhere, structure drawn with 2px ink rules and 1px hairlines.",
+      "Colour carries meaning, never decoration.",
+      "Flat paper; the only shadow is on the leaf while it falls."
+    ],
+    "rules": [
+      {
+        "name": "The One Meaning Rule",
+        "body": "Each signal colour has one job: red = date, avoid, alarm; green = do, healthy; amber = warning; blue = water. Never use a signal colour as decoration or brand colour.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tint-With-Its-Ink Rule",
+        "body": "A tint (red-tint, green-tint, amber-tint) appears only behind text and a border in its own full colour, never on its own as a panel fill.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ledger Figures Rule",
+        "body": "All figures use tabular numerals, so columns of readings, times, and litres line up.",
+        "section": "typography"
+      },
+      {
+        "name": "The Two Widths Rule",
+        "body": "Condense Archivo (70–85%) only for numerals and big headings. Running text stays at normal width.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Paper Rule",
+        "body": "Resting surfaces have no shadow. Separate surfaces with a border or a rule, never a lift.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** keep today's decision on one full-height leaf with the red numeral, Do in green, and Avoid in red.",
+      "**Do** use 2px ink rules for structure and 1px rule hairlines inside tiles and lists.",
+      "**Do** keep every corner square (0px), including pins and stamps.",
+      "**Do** set figures in condensed black Archivo with tabular numerals.",
+      "**Do** give each signal colour exactly one meaning: red date/avoid/alarm, green do/healthy, amber warning, blue water.",
+      "**Do** put tints only behind text and borders in their own colour.",
+      "**Do** offer a 300ms fade instead of the tear for reduced motion."
+    ],
+    "donts": [
+      "**Don't** break the decision into KPI tiles in a dashboard grid; the leaf is the decision.",
+      "**Don't** add resting shadows, gradient surface fills, or rounded corners to tiles, buttons, or inputs. The perforation dots are a pattern, not a fill, and stay.",
+      "**Don't** use red, green, amber, or blue as decoration or brand colour.",
+      "**Don't** condense running text; condensed widths are for numerals and big headings only."
+    ]
+  }
+}

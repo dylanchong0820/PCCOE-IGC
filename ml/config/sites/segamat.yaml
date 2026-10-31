@@ -1,0 +1,9 @@
+# Northern Johor durian area. Example site - confirm coordinates with the team.
+# Only the site block is set here; everything else uses DEFAULT_CONFIG in sedoss_ml.py.
+# Add a soil_crop block to override soil/crop values for this orchard once they are measured.
+site:
+  id: segamat
+  name: "Segamat, Johor"
+  latitude: 2.51
+  longitude: 102.82
+  elevation_m: 40   # approximate - replace with the orchard's surveyed elevation
