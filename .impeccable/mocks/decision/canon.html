@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;font-family:Inter,sans-serif;background:#f3f4f6;color:#111827;display:grid;grid-template-columns:240px 1fr}
+nav{background:#fff;border-right:1px solid #e5e7eb;padding:24px 16px}
+nav b{display:block;font-size:18px;color:#2e7d32;margin-bottom:24px}
+nav a{display:block;padding:10px 12px;border-radius:8px;color:#374151;font-size:14px;margin-bottom:4px}
+nav a.on{background:#e8f5e9;color:#2e7d32;font-weight:600}
+main{padding:28px 32px;display:grid;grid-template-rows:auto auto 1fr;gap:20px}
+h1{font-size:24px}h1 small{display:block;font-size:14px;color:#6b7280;font-weight:400;margin-top:4px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.c{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px}
+.c small{color:#6b7280;font-size:13px}.c b{display:block;font-size:28px;margin-top:6px}
+.c em{font-style:normal;font-size:12px;color:#2e7d32}
+.row{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.map{height:100%;background:linear-gradient(#e8f0e8,#dfe9df);border-radius:8px;position:relative}
+.pin{position:absolute;width:12px;height:12px;border-radius:50%;background:#2e7d32}
+button{font:inherit;font-size:14px;padding:10px 14px;border-radius:8px;border:1px solid #d1d5db;background:#fff;margin:4px 4px 0 0}button.p{background:#2e7d32;color:#fff;border-color:#2e7d32}
+</style></head><body>
+<nav><b>🌱 S.E.D.O.S.S.</b><a class="on">Dashboard</a><a>Bench</a><a>Sites</a><a>History</a><a>Alerts</a></nav>
+<main><h1>Good morning<small>Batu Pahat, Johor · Tuesday 12 February 2019</small></h1>
+<div class="kpis"><div class="c"><small>Today's decision</small><b>Irrigate 15 mm</b><em>07:00 · with nutrients</em></div>
+<div class="c"><small>Soil water</small><b>49 mm</b><em>stress line 50 mm</em></div>
+<div class="c"><small>Final EC</small><b>0.78 dS/m</b><em>capped at crop-safe</em></div>
+<div class="c"><small>Salt recovered</small><b>20.3 g</b><em>since 20 Jan</em></div></div>
+<div class="row"><div class="c"><small>Trained sites</small><div class="map"><span class="pin" style="left:30%;top:20%"></span><span class="pin" style="left:45%;top:35%"></span><span class="pin" style="left:20%;top:12%"></span><span class="pin" style="left:60%;top:65%"></span><span class="pin" style="left:62%;top:85%"></span></div></div>
+<div class="c"><small>Controls</small><div><button class="p">Irrigate now</button><button>Water only</button><button>Skip today</button><button>Pause</button></div>
+<p style="margin-top:18px;font-size:13px;color:#6b7280">Feed 2.00 → after FDI 0.14 → final 0.78 dS/m</p></div></div></main>
+</body></html>

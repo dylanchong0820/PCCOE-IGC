@@ -43,6 +43,32 @@ python3 sedoss_ml.py --offline            # synthetic weather, pipeline test onl
 
 On macOS, XGBoost needs the OpenMP runtime: `brew install libomp`.
 
+### Multiple orchard sites
+
+Models are trained per site so a farmer can pick their orchard's location. Each site is a YAML file in `ml/config/sites/` (currently Raub, Gua Musang, Balik Pulau, Segamat and Batu Pahat — example locations to confirm).
+
+```bash
+cd ml
+python3 train_sites.py                 # train every site on its own NASA POWER data
+python3 train_sites.py --only raub     # retrain one site
+python3 predict_today.py --site raub --history examples/recent_weather_example.csv --readings examples/readings_example.json
+python3 predict_today.py --lat 3.5 --lon 101.9 --history examples/recent_weather_example.csv --readings examples/readings_example.json   # nearest trained site
+```
+
+### Virtual Pi (prototype bench simulation)
+
+`run_bench.py` simulates the small-scale prototype from the parts budget: the Raspberry Pi 5 runs the trained AI for a site each morning, ESP32 #1 runs the feed pump, FDI cell, 3-way valve and float switches, and ESP32 #2 runs the delivery pump and the A/B peristaltic dosing pumps (a PID loop on the final EC sensor). A capacitive soil probe (added to the parts list) gives the AI its soil reading. The bench config, including what each budget line does, is in `ml/config/bench.yaml`.
+
+```bash
+cd ml
+python3 run_bench.py                    # 60-day replay of Batu Pahat weather -> sedoss_outputs/bench_sim/
+python3 run_bench.py --serve            # live API for the website at http://127.0.0.1:8765/api/state
+```
+
+The live API serves `/api/state`, `/api/events`, `/api/daily` and `/api/hardware`, and takes website commands at `POST /api/command` (`pause`, `resume`, `skip_today`, `water_only_today`, `irrigate_now`, `regenerate_fdi`, `refill_feed`, `refill_nutrients`). Everything in the bench is **simulated**, and the physical constants (FDI capacity, flow rates, nutrient stock EC, test-bed area) are placeholders to replace with measurements.
+
+Each site's models and results go to `ml/sedoss_outputs/sites/<id>/`, and `ml/sedoss_outputs/sites/index.json` lists the trained sites for the website map. NASA POWER weather is on a ~50–70 km grid, so sites closer than ~50 km share the same weather; `train_sites.py` warns about that, and `predict_today.py` warns when an orchard is more than 50 km from every trained site.
+
 Outputs are written to `ml/sedoss_outputs/`:
 
 | File | Description |
@@ -91,19 +117,24 @@ XGBoost reduces forecast error by about 21% compared with the "tomorrow = today"
 
 ## 2. Website (`web/`)
 
-[Describe what the website shows.]
+The farmer hub: the screen a durian grower uses to run their S.E.D.O.S.S. unit.
+
+- **Today:** the AI's decision as a tear-off calendar page (what to do, what to avoid, and why), live unit readings, and controls (irrigate now, water only today, skip today, pause).
+- **Unit:** the water path from raw tank to test bed, tank levels, sensors, maintenance actions, and what each part does.
+- **Sites:** a map of the trained sites. Pick one, or click your orchard to find the nearest trained site (with a warning beyond 50 km).
+- **History** and **Alerts:** one row per day, and the unit's event log.
 
 **Run locally**
 
 ```bash
-cd web
-[install command, e.g. npm install]
-[start command, e.g. npm run dev]
+python3 ml/run_bench.py --serve
 ```
 
-**Built with:** [framework / tools]
+Then open http://127.0.0.1:8765. The same command serves the website and the virtual Pi API (needs trained sites first: `python3 ml/train_sites.py`).
 
-**How it uses the ML results:** [e.g. "displays the figures and results.json from ml/sedoss_outputs" or "demo values only, not live model output"]
+**Built with:** plain HTML, CSS and JavaScript (no build step), Leaflet with OpenStreetMap tiles for the map, and the Archivo font from Google Fonts.
+
+**How it uses the ML results:** live. Each morning the virtual Pi runs the trained models for the selected site on replayed NASA weather, and the hub shows that decision. The unit itself (tanks, FDI, dosing, soil) is simulated and labelled as such.
 
 ---
 

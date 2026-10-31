@@ -1,0 +1,45 @@
+{
+  "buildPath": "code",
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-10-31T07:13:11.347Z",
+        "reason": "Claude: canon card deliberately depicts the generic category-standard dashboard; decision mock, not shipped"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-dense.html"
+        ],
+        "createdAt": "2026-10-31T07:13:11.361Z",
+        "reason": "Claude: tight red header tabs are the high-density challenger's defining trait; decision mock, not shipped"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "noto sans",
+        "files": [
+          ".impeccable/mocks/decision/challenger-dense.html"
+        ],
+        "createdAt": "2026-10-31T07:37:52.300Z",
+        "reason": "Claude: unchosen decision mock of a rejected alternative world; deliberately outside DESIGN.md, not shipped"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "inter",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-10-31T07:37:52.318Z",
+        "reason": "Claude: unchosen decision mock of the category-standard look; deliberately outside DESIGN.md, not shipped"
+      }
+    ]
+  }
+}

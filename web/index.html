@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S.E.D.O.S.S. Hub</title>
+<meta name="description" content="Farmer hub for the S.E.D.O.S.S. unit: today's irrigation decision, live unit status and controls.">
+<link rel="preload" href="vendor/fonts/archivo-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <a class="brand" href="#today" aria-label="S.E.D.O.S.S. hub, today">S.E.D.O.S.S<span>.</span></a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#today" data-view="today">Today</a>
+      <a href="#bench" data-view="bench">Unit</a>
+      <a href="#sites" data-view="sites">Sites</a>
+      <a href="#history" data-view="history">History</a>
+      <a href="#alerts" data-view="alerts">Alerts <span class="count" id="alert-count" hidden></span></a>
+    </nav>
+    <div class="rail-foot">
+      <div class="site-now">
+        <b id="rail-site">Loading site…</b>
+        <span id="rail-site-meta"></span>
+      </div>
+      <div class="sim-note">
+        <span class="tag">Simulated unit</span>
+        <span id="rail-replay"></span>
+      </div>
+      <label class="speed">Simulation speed
+        <select id="speed">
+          <option value="60">1 minute per second</option>
+          <option value="600">10 minutes per second</option>
+          <option value="3600">1 hour per second</option>
+        </select>
+      </label>
+    </div>
+  </aside>
+
+  <main id="main" tabindex="-1">
+    <!-- Today -->
+    <section class="view view-today" data-view="today" aria-labelledby="leaf-title">
+      <div class="leaf-stack" id="leaf-stack">
+        <article class="leaf" id="leaf">
+          <header class="leaf-top"><span id="leaf-month">—</span><span id="leaf-weekday">—</span></header>
+          <h1 class="leaf-num" id="leaf-title"><span class="sr-only">Today, </span><span id="leaf-day">–</span></h1>
+          <p class="leaf-sub" id="leaf-sub">Waiting for the unit…</p>
+          <div class="doavoid">
+            <div class="do"><h2>Do</h2><ul id="do-list"></ul></div>
+            <div class="avoid"><h2>Avoid</h2><ul id="avoid-list"></ul></div>
+          </div>
+          <p class="why" id="why"></p>
+          <div class="plan" id="plan"></div>
+        </article>
+      </div>
+
+      <div class="today-side">
+        <div class="side-head">
+          <h2>Unit now</h2>
+          <span class="clock" id="clock">—</span>
+        </div>
+        <div class="readings" id="readings">
+          <div class="r"><span>Raw water salt</span><b id="r-feed">–</b><small>EC dS/m</small></div>
+          <div class="r"><span>After desalination</span><b id="r-outlet">–</b><small id="r-fdi">EC dS/m</small></div>
+          <div class="r"><span>Irrigation water</span><b id="r-final">–</b><small id="r-final-note">EC dS/m</small></div>
+          <div class="r"><span>Clean water tank</span><b id="r-buffer">–</b><small>litres of 15</small></div>
+          <div class="r"><span>Brine tank</span><b id="r-brine">–</b><small>litres of 15</small></div>
+          <div class="r"><span>Salt recovered</span><b id="r-salt">–</b><small>grams so far</small></div>
+        </div>
+
+        <div class="notice" id="notice" hidden></div>
+
+        <div class="controls" id="controls">
+          <div class="btn-row">
+            <button class="btn primary" id="btn-irrigate" aria-expanded="false" aria-controls="irrigate-form">Irrigate now</button>
+            <button class="btn" id="btn-water-only">Water only today</button>
+            <button class="btn" id="btn-skip">Skip today</button>
+            <button class="btn" id="btn-pause">Pause unit</button>
+          </div>
+          <form class="irrigate-form" id="irrigate-form" hidden>
+            <label>Amount <span class="field"><input type="number" id="irr-mm" min="1" max="15" step="1" value="5" required> mm</span></label>
+            <label class="check"><input type="checkbox" id="irr-fert"> Add nutrients</label>
+            <span class="irr-litres" id="irr-litres"></span>
+            <button class="btn primary" type="submit">Start watering</button>
+            <button class="btn ghost" type="button" id="irr-cancel">Cancel</button>
+          </form>
+          <div class="confirm" id="confirm" hidden>
+            <span id="confirm-text"></span>
+            <button class="btn primary" id="confirm-yes">Confirm</button>
+            <button class="btn ghost" id="confirm-no">Keep plan</button>
+          </div>
+          <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="today-log">
+          <h3>Today's log</h3>
+          <ol id="today-log"></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Unit -->
+    <section class="view view-bench" data-view="bench" hidden aria-labelledby="bench-title">
+      <header class="view-head"><h1 id="bench-title">Unit</h1><p>Water path from raw tank to the test bed. All values come from the simulated prototype bench.</p></header>
+      <div class="flow" id="flow"></div>
+      <div class="bench-grid">
+        <div class="block">
+          <h2>Tanks</h2>
+          <table class="tbl" id="tanks"></table>
+        </div>
+        <div class="block">
+          <h2>Sensors</h2>
+          <table class="tbl" id="sensors"></table>
+        </div>
+        <div class="block">
+          <h2>Maintenance</h2>
+          <div class="btn-col">
+            <button class="btn" data-cmd="regenerate_fdi">Clean FDI electrodes now</button>
+            <button class="btn" data-cmd="refill_feed">Mark raw-water tank refilled</button>
+            <button class="btn" data-cmd="refill_nutrients">Mark nutrient stock refilled</button>
+          </div>
+          <p class="hint">Use these after doing the job on the unit; the unit logs each one.</p>
+        </div>
+      </div>
+      <div class="block">
+        <h2>Parts and what they do</h2>
+        <table class="tbl parts" id="parts"></table>
+      </div>
+    </section>
+
+    <!-- Sites -->
+    <section class="view view-sites" data-view="sites" hidden aria-labelledby="sites-title">
+      <header class="view-head"><h1 id="sites-title">Sites</h1><p>Predictions only exist for trained sites. Pick yours, or click your orchard on the map to find the nearest one.</p></header>
+      <div class="sites-grid">
+        <div class="map-wrap"><div id="map" role="application" aria-label="Map of trained sites"></div></div>
+        <div class="sites-side">
+          <label class="search">Find a trained site
+            <input type="search" id="site-search" placeholder="Type a town, e.g. Raub" autocomplete="off">
+          </label>
+          <div class="nearest" id="nearest" hidden></div>
+          <ul class="roster" id="roster"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- History -->
+    <section class="view view-history" data-view="history" hidden aria-labelledby="history-title">
+      <header class="view-head"><h1 id="history-title">History</h1><p>One row per day since the unit started. Soil water is the probe reading at the 05:00 decision.</p></header>
+      <div class="block chart-block"><div id="chart"></div></div>
+      <div class="block"><div class="tbl-scroll"><table class="tbl" id="daily"></table></div></div>
+    </section>
+
+    <!-- Alerts -->
+    <section class="view view-alerts" data-view="alerts" hidden aria-labelledby="alerts-title">
+      <header class="view-head"><h1 id="alerts-title">Alerts and log</h1>
+        <div class="filter" role="group" aria-label="Filter">
+          <button class="chip on" data-level="all">Everything</button>
+          <button class="chip" data-level="attention">Needs attention</button>
+        </div>
+      </header>
+      <ol class="events" id="events"></ol>
+    </section>
+  </main>
+</div>
+
+<div class="offline" id="offline" hidden>
+  <div class="leaf offline-leaf">
+    <header class="leaf-top"><span>UNIT</span><span>OFFLINE</span></header>
+    <p class="offline-big">No signal</p>
+    <p>The hub cannot reach the unit. To start the simulated unit, run this in the project folder:</p>
+    <pre>python3 ml/run_bench.py --serve</pre>
+    <p>then open <b>http://127.0.0.1:8765</b>. This page retries every few seconds.</p>
+  </div>
+</div>
+
+<script src="vendor/leaflet/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

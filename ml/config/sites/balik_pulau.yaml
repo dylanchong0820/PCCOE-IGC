@@ -1,0 +1,9 @@
+# Coastal hillside orchards. Example site - confirm coordinates with the team.
+# Only the site block is set here; everything else uses DEFAULT_CONFIG in sedoss_ml.py.
+# Add a soil_crop block to override soil/crop values for this orchard once they are measured.
+site:
+  id: balik_pulau
+  name: "Balik Pulau, Penang"
+  latitude: 5.35
+  longitude: 100.24
+  elevation_m: 50   # approximate - replace with the orchard's surveyed elevation

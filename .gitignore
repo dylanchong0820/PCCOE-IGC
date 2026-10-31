@@ -4,3 +4,7 @@ sedoss_outputs/nasa_power_cache.csv
 ml/sedoss_outputs/cache/
 __pycache__/
 .DS_Store
+ml/sedoss_outputs/sites/*/cache/
+.impeccable/config.local.json
+.impeccable/hook.cache.json
+.impeccable/review/

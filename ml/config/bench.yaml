@@ -1,0 +1,126 @@
+# Virtual Pi: the S.E.D.O.S.S. small-scale prototype bench.
+#
+# Hardware follows SEDOSS_Small_Scale_Budget_MYR_USD.xlsx (Stages 0-8), plus one added part
+# (the capacitive soil probe). Numbers marked PLACEHOLDER are guesses so the simulation can run.
+# They are not measured values; replace them as the bench is built and tested.
+
+site: batu_pahat              # trained site whose models and NASA weather the Pi uses
+replay:
+  start: "2019-01-20"         # weather replay start (dry spell at Batu Pahat, early 2019)
+  days: 60
+  history_days: 14            # weather days the Pi "already logged" before the replay starts
+seed: 7
+
+schedule:
+  decision_time: "05:00"      # Pi runs the AI decision
+  morning_time: "07:00"
+  evening_time: "18:30"       # used on heatwave days
+
+# ---------------------------------------------------------------- Stage 1: feed water
+feed_tank:                    # 30-50 L HDPE raw-water tank
+  capacity_l: 40
+  initial_l: 40
+  ec_dS_m: 2.0                # PLACEHOLDER: synthetic NaCl brackish water
+  ph: 7.4
+  low_alarm_l: 5
+  auto_refill: true           # batch runs: the operator refills it when it runs low
+feed_pump:
+  flow_l_min: 0.3             # PLACEHOLDER: sets the FDI flow rate
+
+# ---------------------------------------------------------------- Stage 2: FDI module
+fdi:
+  supply_v: 1.2               # bench PSU setting, low-voltage Faradaic operation
+  max_removal: 0.93           # PLACEHOLDER: fraction of salt removed by fresh electrodes
+  capacity_g: 6.0             # PLACEHOLDER: salt the electrodes hold before they saturate
+  saturation_shape: 3         # removal = max_removal * (1 - (load/capacity)^shape)
+  outlet_ec_limit_dS_m: 0.5   # outlet above this -> 3-way valve diverts to brine and FDI regenerates
+  regen_flow_l_min: 0.1       # PLACEHOLDER
+  regen_release_g_min: 0.5    # PLACEHOLDER: salt released per minute during regeneration
+brine_tank:                   # 10-20 L brine collection tank
+  capacity_l: 15
+
+# ---------------------------------------------------------------- Stage 3: treated-water buffer
+buffer_tank:                  # 10-20 L HDPE buffer tank with high/low float switches
+  capacity_l: 15
+  initial_l: 10
+  high_float_frac: 0.9
+  low_float_frac: 0.2
+delivery_pump:
+  flow_l_min: 1.0             # PLACEHOLDER
+
+# ---------------------------------------------------------------- Stage 4: nutrient dosing
+dosing:                       # peristaltic pumps A and B, 1:1 A/B hydroponic nutrient stock
+  stock_ec_dS_m: 120          # PLACEHOLDER: EC of the A+B concentrate mix
+  pump_max_ml_min: 10         # PLACEHOLDER: per pump
+  stock_a_l: 2.0
+  stock_b_l: 2.0
+  stock_low_alarm_l: 0.2
+  mixer_tau_s: 10             # static mixer + sensor response
+  mixer_delay_s: 5
+  pid: {kp: 0.35, ki: 0.06, kd: 0.0}
+  ph_drop_per_dS_m: 0.6       # PLACEHOLDER: nutrient concentrate is slightly acidic
+  ph_range: [5.5, 7.5]
+
+# ---------------------------------------------------------------- Stage 5/6: crop side
+test_bed:                     # growing-medium bed (Stage 6 growing medium) that receives the water
+  area_m2: 0.25               # PLACEHOLDER: irrigation mm x area = litres delivered
+  receives_rain: true         # outdoor bed, so it mirrors an orchard patch
+  initial_fraction: 0.6       # starting soil water as a fraction of capacity
+soil_probe:                   # ADDED PART: hobby capacitive soil-moisture sensor v1.2 on the ADC module
+  raw_dry: 20500              # ADS1115 counts at calibration point vwc_dry (PLACEHOLDER)
+  raw_wet: 10200              # ADS1115 counts at calibration point vwc_wet (PLACEHOLDER)
+  vwc_dry: 0.05
+  vwc_wet: 0.45
+  noise_counts: 150
+weather_station:              # Stage 5 temperature/humidity + solar-radiation sensors
+  t_noise_c: 0.3
+  rh_noise_pct: 2.0
+  rs_noise_frac: 0.05
+forecast_error:               # "weather API" forecast for today = actual + this error (SIMULATED)
+  tmax_sd_c: 1.0
+  tmin_sd_c: 0.8
+  rh_sd_pct: 5.0
+  u2_rel_sd: 0.25
+  rs_rel_sd: 0.15
+  rain_rel_sd: 0.3
+
+# ---------------------------------------------------------------- Stage 7: salt recovery
+evaporation:
+  tray_area_m2: 0.24          # 2 shallow trays, PLACEHOLDER size
+  tray_capacity_l: 3.0
+  photothermal_boost: 1.3     # PLACEHOLDER: black sponge speeds evaporation vs open water
+  brine_to_tray_l_h: 0.5
+  crystallize_g_l: 300        # salt crystallizes out above this concentration
+
+# ---------------------------------------------------------------- parts list -> simulator
+# What each budget line does in the simulation. The website reads this via /api/hardware.
+hardware:
+  - {part: "Raspberry Pi 5, 8 GB", stage: 0, node: pi5, role: "AI brain: daily ET0 + soil forecast, irrigation/dosing decision, logs, website API"}
+  - {part: "ESP32 microcontroller #1", stage: 0, node: esp32_treatment, role: "Feed pump, FDI on/regenerate, 3-way valve, float switches, flow meters, feed/outlet EC"}
+  - {part: "ESP32 microcontroller #2", stage: 0, node: esp32_dosing, role: "Delivery pump, dosing pumps A/B (PID on final EC), pH, water temperature, soil probe"}
+  - {part: "Relay / MOSFET modules", stage: 0, node: both, role: "Switch pumps and solenoid (relay); PWM the dosing pumps (MOSFET)"}
+  - {part: "ADC / RS485 interface modules", stage: 0, node: both, role: "RS485 to the three EC sensors; ADC for pH, solar radiation and soil probe"}
+  - {part: "Adjustable 0-30 V DC bench power supply", stage: 0, node: esp32_treatment, role: "Powers the FDI cell at low voltage"}
+  - {part: "30-50 L HDPE raw-water tank", stage: 1, node: plant, role: "Feed tank (synthetic brackish water)"}
+  - {part: "GAC + 5 um PP filters", stage: 1, node: plant, role: "Pretreatment before FDI (passed through, not modelled)"}
+  - {part: "Feed-water pump", stage: 1, node: esp32_treatment, role: "Pushes feed water through filters and FDI"}
+  - {part: "Selective FDI flow cell + electrodes", stage: 2, node: plant, role: "Removes salt until electrodes saturate, then regenerates into brine"}
+  - {part: "Feed EC sensor", stage: 2, node: esp32_treatment, role: "Salt level of raw water"}
+  - {part: "Outlet EC sensor", stage: 2, node: esp32_treatment, role: "Salt level after FDI; triggers diversion and regeneration"}
+  - {part: "Inlet / outlet flow meters", stage: 2, node: esp32_treatment, role: "Litres treated and diverted"}
+  - {part: "3-way solenoid valve", stage: 2, node: esp32_treatment, role: "Routes FDI output to buffer tank or brine tank"}
+  - {part: "10-20 L brine collection tank", stage: 2, node: plant, role: "Collects regeneration brine"}
+  - {part: "10-20 L treated-water buffer tank", stage: 3, node: plant, role: "Stores crop-safe water"}
+  - {part: "High / low float switches", stage: 3, node: esp32_treatment, role: "Start/stop treatment; protect delivery pump from running dry"}
+  - {part: "Delivery / circulation pump", stage: 3, node: esp32_dosing, role: "Delivers the irrigation volume"}
+  - {part: "Peristaltic dosing pumps A and B", stage: 4, node: esp32_dosing, role: "Inject A/B nutrient stock (replaces the Venturi in the ML code)"}
+  - {part: "Static mixer / mixing chamber", stage: 4, node: plant, role: "Mixes stock into the water before the final EC sensor"}
+  - {part: "Final EC sensor", stage: 4, node: esp32_dosing, role: "Feedback for the dosing PID loop"}
+  - {part: "pH sensor", stage: 4, node: esp32_dosing, role: "Alarm if nutrient water leaves the safe pH range"}
+  - {part: "Water-temperature sensor", stage: 4, node: esp32_dosing, role: "Reported with EC readings"}
+  - {part: "Temperature / humidity sensor", stage: 5, node: pi5, role: "Daily Tmax, Tmin, RH for the AI"}
+  - {part: "Solar-radiation sensor", stage: 5, node: pi5, role: "Daily solar radiation for the AI"}
+  - {part: "Weather API / cloud allowance", stage: 5, node: pi5, role: "Wind, rain and today's forecast (NASA POWER replay in the simulation)"}
+  - {part: "Growing medium / DWC unit", stage: 6, node: plant, role: "Test bed that receives the irrigation water"}
+  - {part: "Capacitive soil moisture sensor v1.2 (ADDED, not in budget)", stage: 6, node: esp32_dosing, role: "Soil water reading for the AI decision"}
+  - {part: "Shallow evaporation trays + photothermal sponge", stage: 7, node: plant, role: "Evaporate brine, recover salt"}
