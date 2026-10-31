@@ -245,6 +245,25 @@ main { min-width: 0; outline: none; }
 .search { display: grid; gap: 6px; font-weight: 600; }
 .nearest { border: 1px solid var(--ink); background: var(--paper); padding: 14px; display: grid; gap: 8px; font-size: 14.5px; }
 .nearest.far { border: 2px solid var(--red); }
+.add-site { background: var(--paper); border: 1px solid var(--ink); padding: 16px; display: grid; gap: 12px; }
+.add-site h2 { font-size: 20px; font-weight: 800; }
+.add-site label { display: grid; gap: 4px; font-weight: 600; font-size: 14px; }
+.add-site input { font: inherit; font-weight: 400; color: var(--ink); background: var(--paper); border: 1px solid var(--ink); border-radius: 0; padding: 7px 8px; width: 100%; min-width: 0; }
+.as-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.as-near { font-size: 13.5px; color: var(--ink-2); }
+.as-near.warn { color: var(--amber); }
+.as-err { font-size: 14px; color: var(--red); }
+.as-near:empty, .as-err:empty { display: none; }
+#btn-add-site { justify-self: start; }
+.jobs:empty { display: none; }
+.jobs li { background: var(--paper); border: 1px solid var(--ink); padding: 12px 14px; display: grid; gap: 6px; margin-bottom: 10px; font-size: 14px; }
+.jobs li b { font-size: 16px; }
+.jobs .bar { height: 6px; border: 1px solid var(--ink); overflow: hidden; }
+.jobs .bar i { display: block; height: 100%; background: var(--blue); transition: width 1.4s linear; }
+.jobs li.failed { border: 2px solid var(--red); }
+.jobs li.failed span { color: var(--red); }
+.jobs li.done { border: 2px solid var(--green); }
+.jobs .btn { justify-self: start; padding: 8px 12px; font-size: 14px; }
 .roster li { background: var(--paper); border: 1px solid var(--rule); padding: 14px 16px; display: grid; gap: 6px; margin-bottom: 10px; }
 .roster li.current { border: 2px solid var(--red); }
 .roster h3 { font-size: 20px; font-weight: 800; display: flex; justify-content: space-between; gap: 10px; }
@@ -314,5 +333,6 @@ main { min-width: 0; outline: none; }
   .rail { gap: 10px; }
   .events li { grid-template-columns: 1fr; gap: 2px; }
   .lv { width: 70px; }
+  .as-row { grid-template-columns: 1fr 1fr; }
   .view-head h1 { font-size: 32px; }
 }

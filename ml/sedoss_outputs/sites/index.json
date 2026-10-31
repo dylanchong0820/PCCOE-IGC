@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31T06:35:06+00:00",
+  "generated_at": "2026-10-31T09:46:49+00:00",
   "weather_source": "NASA POWER daily",
   "nearest_site_warning_km": 50.0,
   "sites": [
@@ -237,6 +237,53 @@
       },
       "models_dir": "sedoss_outputs/sites/segamat/models",
       "results_file": "sedoss_outputs/sites/segamat/results.json"
+    },
+    {
+      "id": "tawau_sabah",
+      "name": "Tawau, Sabah",
+      "latitude": 4.25,
+      "longitude": 117.89,
+      "elevation_m": 30.0,
+      "synthetic_data": false,
+      "data_range": [
+        "2015-01-01",
+        "2024-12-31"
+      ],
+      "heat_tmax_c": 30.3,
+      "config_warnings": [
+        "EC SAFETY: full-dose EC 1.20 dS/m = ~0.77 ppt exceeds the crop-safe limit 0.5 ppt. Lower fert_ec_increase_dS_m or base EC, or justify why fertiliser ions are less harmful than NaCl (with a source)."
+      ],
+      "metrics": {
+        "et0_forecast": {
+          "XGBoost - observations only": {
+            "R2": 0.217,
+            "RMSE": 0.478,
+            "MAE": 0.367
+          },
+          "XGBoost - with (simulated) weather forecast": {
+            "R2": 0.709,
+            "RMSE": 0.291,
+            "MAE": 0.227
+          },
+          "Ridge - with (simulated) weather forecast": {
+            "R2": 0.669,
+            "RMSE": 0.311,
+            "MAE": 0.25
+          },
+          "Persistence (tomorrow = today)": {
+            "R2": -0.162,
+            "RMSE": 0.582,
+            "MAE": 0.438
+          }
+        },
+        "soil_change_xgb_SIMULATED": {
+          "R2": 0.803,
+          "RMSE": 1.514,
+          "MAE": 0.841
+        }
+      },
+      "models_dir": "sedoss_outputs/sites/tawau_sabah/models",
+      "results_file": "sedoss_outputs/sites/tawau_sabah/results.json"
     }
   ]
 }

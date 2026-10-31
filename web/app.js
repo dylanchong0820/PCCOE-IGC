@@ -76,7 +76,7 @@
     document.querySelectorAll(".nav a").forEach((a) => {
       if (a.dataset.view === name) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
     });
-    if (name === "sites") initMap();
+    if (name === "sites") { initMap(); pollJobs(); }
     if (name === "history") loadDaily();
     if (name === "bench") loadHardware();
     renderView();
@@ -467,16 +467,21 @@
     try { idx = await loadSites(); } catch (e) { return; }
     map = L.map("map", { zoomControl: true, attributionControl: true }).setView([3.6, 102.1], 7);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 13, attribution: "© OpenStreetMap contributors" }).addTo(map);
+    addMarkers(idx);
+    map.on("click", (e) => showNearest(e.latlng.lat, e.latlng.lng));
+    setTimeout(() => map.invalidateSize(), 50);
+    renderSites();
+  }
+
+  function addMarkers(idx) {
     idx.sites.forEach((s) => {
+      if (markers[s.id]) return;
       markers[s.id] = L.marker([s.latitude, s.longitude], {
         title: s.name, keyboard: true,
         icon: L.divIcon({ className: "", html: `<div class="site-pin"></div>`, iconSize: [18, 18], iconAnchor: [9, 9] }),
       }).addTo(map).bindTooltip(s.name, { direction: "top", offset: [0, -10] })
         .on("click", () => { $("site-search").value = s.name; renderSites(); });
     });
-    map.on("click", (e) => showNearest(e.latlng.lat, e.latlng.lng));
-    setTimeout(() => map.invalidateSize(), 50);
-    renderSites();
   }
 
   function showNearest(lat, lon) {
@@ -491,7 +496,97 @@
     n.innerHTML = `<b>Your orchard: ${num(lat, 2)}°N ${num(lon, 2)}°E</b>
       <span>Nearest trained site: <b>${esc(best.name)}</b>, ${num(bestD, 0)} km away.</span>
       ${far ? `<span>That is beyond ${FAR_KM} km, so its weather may not match yours. Ask the team to train a site for your area before relying on it.</span>` : `<span>Close enough to share its weather.</span>`}
-      ${best.id === S.site.id ? "<span>This site is already in use.</span>" : `<button class="btn" data-use="${esc(best.id)}">Use ${esc(best.name)}</button>`}`;
+      ${best.id === S.site.id ? "<span>This site is already in use.</span>" : `<button class="btn" data-use="${esc(best.id)}">Use ${esc(best.name)}</button>`}
+      <button class="btn ghost" type="button" data-add-here="${lat},${lon}">Add this spot as a new site</button>`;
+    if (!$("add-site").hidden) { $("as-lat").value = lat.toFixed(4); $("as-lon").value = lon.toFixed(4); nearHint(); }
+  }
+
+  // ---------- add a site ----------
+  let jobsTimer = null;
+  const jobState = {};
+
+  function openAddForm(lat, lon) {
+    $("add-site").hidden = false;
+    $("btn-add-site").setAttribute("aria-expanded", "true");
+    if (lat !== undefined) { $("as-lat").value = (+lat).toFixed(4); $("as-lon").value = (+lon).toFixed(4); }
+    nearHint();
+    $("as-name").focus();
+  }
+  function closeAddForm() {
+    $("add-site").hidden = true;
+    $("btn-add-site").setAttribute("aria-expanded", "false");
+    $("as-err").textContent = "";
+  }
+
+  function nearHint() {
+    const lat = parseFloat($("as-lat").value), lon = parseFloat($("as-lon").value), el = $("as-near");
+    if (Number.isNaN(lat) || Number.isNaN(lon) || !sitesIndex || !sitesIndex.sites.length) { el.textContent = ""; return; }
+    let best = null, bestD = Infinity;
+    sitesIndex.sites.forEach((s) => { const d = haversine(lat, lon, s.latitude, s.longitude); if (d < bestD) { best = s; bestD = d; } });
+    const close = bestD < FAR_KM;
+    el.classList.toggle("warn", close);
+    el.textContent = close
+      ? `Only ${num(bestD, 0)} km from ${best.name}. NASA weather comes on a grid about 50 km wide, so this site would likely get the same weather. You can still add it.`
+      : `Nearest trained site: ${best.name}, ${num(bestD, 0)} km away.`;
+  }
+
+  $("btn-add-site").addEventListener("click", () => ($("add-site").hidden ? openAddForm() : closeAddForm()));
+  $("as-cancel").addEventListener("click", closeAddForm);
+  ["as-lat", "as-lon"].forEach((id) => $(id).addEventListener("input", nearHint));
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-add-here]");
+    if (!b) return;
+    const [lat, lon] = b.dataset.addHere.split(",");
+    openAddForm(lat, lon);
+  });
+
+  $("add-site").addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const err = $("as-err");
+    const name = $("as-name").value.trim(), lat = $("as-lat").value, lon = $("as-lon").value, elev = $("as-elev").value;
+    if (name.length < 2) { err.textContent = "Give the site a name."; $("as-name").focus(); return; }
+    if (lat === "" || lon === "") { err.textContent = "Enter the latitude and longitude, or click the orchard on the map."; $("as-lat").focus(); return; }
+    err.textContent = "";
+    const btn = ev.submitter || $("add-site").querySelector("[type=submit]");
+    btn.disabled = true;
+    try {
+      await api("/api/sites", { name, latitude: +lat, longitude: +lon, elevation_m: elev === "" ? null : +elev });
+      $("add-site").reset();
+      $("as-near").textContent = "";
+      closeAddForm();
+      pollJobs();
+    } catch (e) {
+      err.textContent = e.message;
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  async function pollJobs() {
+    clearTimeout(jobsTimer);
+    let jobs;
+    try { jobs = await api("/api/sites/jobs"); } catch (e) { jobsTimer = setTimeout(pollJobs, 4000); return; }
+    let newlyDone = false;
+    jobs.forEach((j) => { if (j.status === "done" && jobState[j.id] && jobState[j.id] !== "done") newlyDone = true; jobState[j.id] = j.status; });
+    if (newlyDone) {
+      sitesIndex = null;
+      try { const idx = await loadSites(); if (map) addMarkers(idx); } catch (e) { /* next poll retries */ }
+      rosterKey = null;
+      renderSites();
+    }
+    const nowS = Date.now() / 1000;
+    $("site-jobs").innerHTML = jobs.slice(0, 4).map((j) => {
+      if (j.status === "queued" || j.status === "training") {
+        const secs = Math.max(0, Math.round(nowS - (j.started_at || j.queued_at)));
+        return `<li><b>${esc(j.name)}</b><span>${j.status === "queued" ? "Waiting for the previous site to finish…" : `Downloading weather and training models… ${secs} s`}</span><div class="bar" role="progressbar" aria-label="Training ${esc(j.name)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.min(95, Math.round(secs / 60 * 100))}"><i style="width:${j.status === "queued" ? 0 : Math.min(95, secs / 60 * 100)}%"></i></div></li>`;
+      }
+      if (j.status === "done") {
+        const inUse = S && S.site.id === j.id;
+        return `<li class="done"><b>${esc(j.name)} is ready</b><span>Trained on 2015–2024 NASA weather. It is on the map and in the list below.</span>${inUse ? "" : `<button class="btn" data-use="${esc(j.id)}">Use ${esc(j.name)}</button>`}</li>`;
+      }
+      return `<li class="failed"><b>${esc(j.name)} was not added</b><span>${esc(j.error)}</span></li>`;
+    }).join("");
+    if (jobs.some((j) => j.status === "queued" || j.status === "training")) jobsTimer = setTimeout(pollJobs, 1500);
   }
 
   document.addEventListener("click", async (e) => {

@@ -7,6 +7,8 @@ Small HTTP server for the farmer hub: serves the website (web/) and the virtual 
   GET  /api/daily          one row per simulated day
   GET  /api/hardware       parts list -> what each part does in the simulation
   GET  /api/sites          trained sites (from sedoss_outputs/sites/index.json)
+  POST /api/sites          {"name", "latitude", "longitude", "elevation_m"?}  add a site and train it
+  GET  /api/sites/jobs     status of sites being added (queued / training / done / failed)
   POST /api/site           {"site": "raub"}  restart the unit on another trained site
   POST /api/command        {"cmd": "...", "args": {...}}
        cmds: pause, resume, skip_today, water_only_today, irrigate_now {mm, fertigate},
@@ -28,12 +30,15 @@ import pandas as pd
 
 from sites import load_index
 
+from .site_jobs import SiteJobs
+
 WEB_DIR = Path(__file__).resolve().parents[2] / "web"
 
 
 def serve(make_sim, sim, host="127.0.0.1", port=8765, speed=600.0):
     ctl = {"speed": float(speed), "stop": False, "sim": sim}
     switch_lock = threading.Lock()
+    site_jobs = SiteJobs()
 
     def run():
         last = time.monotonic()
@@ -92,6 +97,8 @@ def serve(make_sim, sim, host="127.0.0.1", port=8765, speed=600.0):
                 return self._send(200, s.cfg["hardware"])
             if u.path == "/api/sites":
                 return self._send(200, load_index())
+            if u.path == "/api/sites/jobs":
+                return self._send(200, site_jobs.list())
             if u.path.startswith("/api/"):
                 return self._send(404, {"error": "not found"})
             self._static(u.path)
@@ -106,6 +113,8 @@ def serve(make_sim, sim, host="127.0.0.1", port=8765, speed=600.0):
                 if self.path == "/api/speed":
                     ctl["speed"] = min(max(0.0, float(body["sim_seconds_per_second"])), 7200.0)
                     return self._send(200, {"ok": True, "speed": ctl["speed"]})
+                if self.path == "/api/sites":
+                    return self._send(202, site_jobs.add(body))
                 if self.path == "/api/site":
                     with switch_lock:
                         new = make_sim(str(body["site"]))   # raises KeyError for an untrained site

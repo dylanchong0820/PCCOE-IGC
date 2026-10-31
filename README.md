@@ -121,7 +121,7 @@ The farmer hub: the screen a durian grower uses to run their S.E.D.O.S.S. unit.
 
 - **Today:** the AI's decision as a tear-off calendar page (what to do, what to avoid, and why), live unit readings, and controls (irrigate now, water only today, skip today, pause).
 - **Unit:** the water path from raw tank to test bed, tank levels, sensors, maintenance actions, and what each part does.
-- **Sites:** a map of the trained sites. Pick one, or click your orchard to find the nearest trained site (with a warning beyond 50 km).
+- **Sites:** a map of the trained sites. Pick one, or click your orchard to find the nearest trained site (with a warning beyond 50 km). **Add a new site** takes a name and location (or a click on the map), downloads that spot's NASA weather and trains its models in the background (about 15–60 s); the site then appears on the map and can be used straight away. It writes `ml/config/sites/<id>.yaml` and `ml/sedoss_outputs/sites/<id>/`.
 - **History** and **Alerts:** one row per day, and the unit's event log.
 
 **Run locally**

@@ -132,7 +132,7 @@
 
     <!-- Sites -->
     <section class="view view-sites" data-view="sites" hidden aria-labelledby="sites-title">
-      <header class="view-head"><h1 id="sites-title">Sites</h1><p>Predictions only exist for trained sites. Pick yours, or click your orchard on the map to find the nearest one.</p></header>
+      <header class="view-head"><h1 id="sites-title">Sites</h1><p>Predictions only exist for trained sites. Pick yours, click your orchard on the map to find the nearest one, or add a new site.</p></header>
       <div class="sites-grid">
         <div class="map-wrap"><div id="map" role="application" aria-label="Map of trained sites"></div></div>
         <div class="sites-side">
@@ -140,6 +140,24 @@
             <input type="search" id="site-search" placeholder="Type a town, e.g. Raub" autocomplete="off">
           </label>
           <div class="nearest" id="nearest" hidden></div>
+          <button class="btn" id="btn-add-site" aria-expanded="false" aria-controls="add-site">Add a new site</button>
+          <form class="add-site" id="add-site" hidden novalidate>
+            <h2>Add a site</h2>
+            <p class="hint">Click the orchard on the map to fill in the location, or type it. The unit downloads 10 years of NASA weather and trains its models, which takes about a minute.</p>
+            <label>Name <input id="as-name" maxlength="60" placeholder="e.g. Tawau, Sabah" autocomplete="off"></label>
+            <div class="as-row">
+              <label>Latitude <input id="as-lat" type="number" step="0.0001" min="-60" max="60" placeholder="4.25"></label>
+              <label>Longitude <input id="as-lon" type="number" step="0.0001" min="-180" max="180" placeholder="117.89"></label>
+              <label>Elevation (m) <input id="as-elev" type="number" step="1" min="-100" max="3000" placeholder="50"></label>
+            </div>
+            <p class="as-near" id="as-near"></p>
+            <p class="as-err" id="as-err" role="alert"></p>
+            <div class="btn-row">
+              <button class="btn primary" type="submit">Add and train</button>
+              <button class="btn ghost" type="button" id="as-cancel">Cancel</button>
+            </div>
+          </form>
+          <ul class="jobs" id="site-jobs" aria-live="polite"></ul>
           <ul class="roster" id="roster"></ul>
         </div>
       </div>
