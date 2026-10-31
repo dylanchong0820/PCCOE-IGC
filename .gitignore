@@ -8,3 +8,4 @@ ml/sedoss_outputs/sites/*/cache/
 .impeccable/config.local.json
 .impeccable/hook.cache.json
 .impeccable/review/
+docs/*.pdf
