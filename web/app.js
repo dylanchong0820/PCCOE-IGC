@@ -124,7 +124,7 @@
       if (![...sel.options].some((o) => o.value === String(S.speed))) {
         const o = document.createElement("option");     // a speed set from elsewhere (API or script)
         o.value = String(S.speed);
-        o.textContent = `${S.speed}× real time`;
+        o.textContent = S.speed === 0 ? "Clock stopped" : `${S.speed}× real time`;
         sel.append(o);
       }
       sel.value = String(S.speed);
@@ -176,9 +176,12 @@
         avoid: ["Watering today: the water would drain past the roots."],
       };
     }
-    const plan = S.today_plan, done = todaysDelivery();
-    const when = plan ? hhmm(plan.start) : done ? hhmm(done.started) : rec.timing;
-    const litres = plan ? plan.volume_l : done ? done.volume_l : null;
+    const plan = S.today_plan, last = todaysDelivery();
+    const done = last && !String(last.id).startsWith("manual") ? last : null;   // the AI's watering only
+    // the AI's own watering in progress right now (a manual "Irrigate now" job is shown in the plan line)
+    const live = S.delivery && S.delivery.scenario !== "manual" ? S.delivery : null;
+    const when = plan ? hhmm(plan.start) : live ? hhmm(live.started) : done ? hhmm(done.started) : rec.timing;
+    const litres = plan ? plan.volume_l : live ? live.volume_l : done ? done.volume_l : null;
     const setpoint = dec.applied_ec_setpoint_dS_m;
     const d = [`Irrigate <b>${num(rec.volume_mm, 0)} mm</b>${litres ? ` (${num(litres)} L on the test bed)` : ""} at <b>${esc(when)}</b>.`];
     d.push(setpoint && !ov.water_only ? `Add nutrients to <b>EC ${num(setpoint, 2)} dS/m</b>.` : "Water only, no nutrients.");
@@ -470,8 +473,13 @@
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 13, attribution: "© OpenStreetMap contributors" }).addTo(map);
     addMarkers(idx);
     map.on("click", (e) => showNearest(e.latlng.lat, e.latlng.lng));
-    setTimeout(() => map.invalidateSize(), 50);
+    setTimeout(() => { map.invalidateSize(); fitSites(idx); }, 50);
     renderSites();
+  }
+
+  function fitSites(idx) {               // zoom so every trained site is on the map
+    if (!map || !idx.sites.length) return;
+    map.fitBounds(L.latLngBounds(idx.sites.map((s) => [s.latitude, s.longitude])), { padding: [36, 36], maxZoom: 8 });
   }
 
   function addMarkers(idx) {
@@ -571,7 +579,7 @@
     jobs.forEach((j) => { if (j.status === "done" && jobState[j.id] && jobState[j.id] !== "done") newlyDone = true; jobState[j.id] = j.status; });
     if (newlyDone) {
       sitesIndex = null;
-      try { const idx = await loadSites(); if (map) addMarkers(idx); } catch (e) { /* next poll retries */ }
+      try { const idx = await loadSites(); if (map) { addMarkers(idx); fitSites(idx); } } catch (e) { /* next poll retries */ }
       rosterKey = null;
       renderSites();
     }
