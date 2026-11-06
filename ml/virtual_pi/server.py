@@ -127,7 +127,17 @@ def serve(make_sim, sim, host="127.0.0.1", port=8765, speed=600.0):
                 self._send(400, {"error": str(e)})
 
     threading.Thread(target=run, daemon=True).start()
-    httpd = ThreadingHTTPServer((host, port), Handler)
+    try:
+        httpd = ThreadingHTTPServer((host, port), Handler)
+    except OSError as e:
+        ctl["stop"] = True
+        if e.errno in (48, 98, 10048):            # address in use (macOS, Linux, Windows)
+            raise SystemExit(
+                f"\nThe hub is already running on port {port}.\n"
+                f"  - Just open http://{host}:{port} in your browser, or\n"
+                f"  - stop the other copy (Ctrl+C in its window) and run this again, or\n"
+                f"  - run on another port: add  --port {port + 1}\n")
+        raise
     print(f"Farmer hub on http://{host}:{port}/   (virtual Pi API under /api, sim speed {speed:g}x, Ctrl+C to stop)")
     try:
         httpd.serve_forever()

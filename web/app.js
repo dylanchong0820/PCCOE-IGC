@@ -2,9 +2,10 @@
 (() => {
   "use strict";
 
-  // Same origin when the Pi serves this page; otherwise the local virtual Pi (override with ?api=).
+  // Same origin when the Pi serves this page (any port); the local virtual Pi when opened as a file
+  // (override with ?api=).
   const API = new URLSearchParams(location.search).get("api")
-    || (location.protocol.startsWith("http") && location.port === "8765" ? "" : "http://127.0.0.1:8765");
+    || (location.protocol.startsWith("http") ? "" : "http://127.0.0.1:8765");
 
   const $ = (id) => document.getElementById(id);
   const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
