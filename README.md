@@ -124,7 +124,11 @@ The farmer hub: the screen a durian grower uses to run their S.E.D.O.S.S. unit.
 - **Sites:** a map of the trained sites. Pick one, or click your orchard to find the nearest trained site (with a warning beyond 50 km). **Add a new site** takes a name and location (or a click on the map), downloads that spot's NASA weather and trains its models in the background (about 15–60 s); the site then appears on the map and can be used straight away. It writes `ml/config/sites/<id>.yaml` and `ml/sedoss_outputs/sites/<id>/`.
 - **History** and **Alerts:** one row per day, and the unit's event log.
 
-**Run locally**
+**Run locally (easiest):** double-click **`Start Hub (Mac).command`** or **`Start Hub (Windows).bat`** in the project folder. The first time, it sets up the Python environment and installs the packages (a few minutes; Python 3.10 to 3.14 must be installed). After that it starts the hub and opens it in the browser. Close the window to stop the hub.
+
+On a Mac, if it says the file is from an unidentified developer, right-click it and choose **Open**.
+
+**Run locally (terminal)**
 
 ```bash
 python3 ml/run_bench.py --serve
