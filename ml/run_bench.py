@@ -88,13 +88,14 @@ def main():
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--port", type=int, default=8765)
     ap.add_argument("--speed", type=float, default=600, help="--serve: simulated seconds per real second")
+    ap.add_argument("--open", action="store_true", help="--serve: open the hub in the browser")
     args = ap.parse_args()
 
     sim = Simulation(args.config, args.site, args.start, args.days)
     if args.serve:
         from virtual_pi.server import serve
         serve(lambda site: Simulation(args.config, site, args.start, args.days), sim,
-              args.host, args.port, args.speed)
+              args.host, args.port, args.speed, open_browser=args.open)
         return
 
     sim.run()

@@ -22,6 +22,7 @@ import json
 import mimetypes
 import threading
 import time
+import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -35,7 +36,7 @@ from .site_jobs import SiteJobs
 WEB_DIR = Path(__file__).resolve().parents[2] / "web"
 
 
-def serve(make_sim, sim, host="127.0.0.1", port=8765, speed=600.0):
+def serve(make_sim, sim, host="127.0.0.1", port=8765, speed=600.0, open_browser=False):
     ctl = {"speed": float(speed), "stop": False, "sim": sim}
     switch_lock = threading.Lock()
     site_jobs = SiteJobs()
@@ -132,6 +133,10 @@ def serve(make_sim, sim, host="127.0.0.1", port=8765, speed=600.0):
     except OSError as e:
         ctl["stop"] = True
         if e.errno in (48, 98, 10048):            # address in use (macOS, Linux, Windows)
+            if open_browser:                      # double-clicked again: just show the running hub
+                print(f"The hub is already running. Opening http://{host}:{port} ...")
+                webbrowser.open(f"http://{host}:{port}/")
+                raise SystemExit(0)
             raise SystemExit(
                 f"\nThe hub is already running on port {port}.\n"
                 f"  - Just open http://{host}:{port} in your browser, or\n"
@@ -139,6 +144,8 @@ def serve(make_sim, sim, host="127.0.0.1", port=8765, speed=600.0):
                 f"  - run on another port: add  --port {port + 1}\n")
         raise
     print(f"Farmer hub on http://{host}:{port}/   (virtual Pi API under /api, sim speed {speed:g}x, Ctrl+C to stop)")
+    if open_browser:
+        threading.Timer(1.0, webbrowser.open, [f"http://{host}:{port}/"]).start()
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
