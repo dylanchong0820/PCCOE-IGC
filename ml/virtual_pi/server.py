@@ -31,6 +31,7 @@ import pandas as pd
 
 from sites import load_index
 
+from .sim import WeatherUnavailable
 from .site_jobs import SiteJobs
 
 WEB_DIR = Path(__file__).resolve().parents[2] / "web"
@@ -128,6 +129,8 @@ def serve(make_sim, sim, host="127.0.0.1", port=8765, speed=600.0, open_browser=
                         ctl["sim"] = new
                     return self._send(200, {"ok": True, "site": new.site["id"]})
                 self._send(404, {"error": "not found"})
+            except WeatherUnavailable as e:
+                self._send(503, {"error": str(e)})
             except KeyError as e:
                 self._send(400, {"error": str(e).strip("'\"")})
             except (ValueError, json.JSONDecodeError) as e:

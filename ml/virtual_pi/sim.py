@@ -18,6 +18,10 @@ from .controllers import EventLog, Esp32Dosing, Esp32Treatment, Pi5, prefill_his
 ML_DIR = Path(__file__).resolve().parent.parent
 
 
+class WeatherUnavailable(RuntimeError):
+    """Weather for the site is not saved locally and could not be downloaded."""
+
+
 def load_weather(site, start, end):
     """NASA POWER daily weather for the site (uses the training cache when present)."""
     cache_dir = ML_DIR / "sedoss_outputs" / "sites" / site["id"] / "cache"
@@ -26,8 +30,13 @@ def load_weather(site, start, end):
         df = pd.read_csv(cached[0], index_col=0, parse_dates=True)
     else:
         cache = cache_dir / f"nasa_{site['latitude']}_{site['longitude']}_bench.csv"
-        df = fetch_nasa_power(site["latitude"], site["longitude"],
-                              start.strftime("%Y%m%d"), end.strftime("%Y%m%d"), cache)
+        try:
+            df = fetch_nasa_power(site["latitude"], site["longitude"],
+                                  start.strftime("%Y%m%d"), end.strftime("%Y%m%d"), cache)
+        except Exception as e:  # noqa: BLE001 - network errors come in many types
+            raise WeatherUnavailable(
+                f"No saved weather for {site['name']}, and the NASA weather download failed "
+                f"({type(e).__name__}). Connect this computer to the internet once and start the hub again.") from e
     df = df.copy()
     df["et0"] = et0_pm((df["tmax"] + df["tmin"]) / 2, df["tmax"], df["tmin"], df["rh"], df["u2"], df["rs"],
                        df.index.dayofyear, site["latitude"], site["elevation_m"])
