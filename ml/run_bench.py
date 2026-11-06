@@ -91,7 +91,12 @@ def main():
     ap.add_argument("--open", action="store_true", help="--serve: open the hub in the browser")
     args = ap.parse_args()
 
-    sim = Simulation(args.config, args.site, args.start, args.days)
+    from virtual_pi.sim import WeatherUnavailable
+    try:
+        sim = Simulation(args.config, args.site, args.start, args.days)
+    except WeatherUnavailable as e:
+        print(f"\nCould not start the hub: {e}\n")
+        sys.exit(1)
     if args.serve:
         from virtual_pi.server import serve
         serve(lambda site: Simulation(args.config, site, args.start, args.days), sim,
