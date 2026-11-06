@@ -3,9 +3,9 @@
   "configurations": [
     {
       "name": "hub",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["ml/run_bench.py", "--serve", "--speed", "600"],
-      "port": 8765
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": ["ml/run_bench.py", "--serve", "--speed", "600", "--port", "8766"],
+      "port": 8766
     }
   ]
 }
