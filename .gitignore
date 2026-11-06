@@ -9,3 +9,4 @@ ml/sedoss_outputs/sites/*/cache/
 .impeccable/hook.cache.json
 .impeccable/review/
 docs/*.pdf
+.venv/
