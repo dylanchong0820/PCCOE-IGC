@@ -187,9 +187,11 @@
   <div class="leaf offline-leaf">
     <header class="leaf-top"><span>UNIT</span><span>OFFLINE</span></header>
     <p class="offline-big">No signal</p>
-    <p>The hub cannot reach the unit. To start the simulated unit, run this in the project folder:</p>
-    <pre>python3 ml/run_bench.py --serve</pre>
-    <p>then open <b>http://127.0.0.1:8765</b>. This page retries every few seconds.</p>
+    <p>The hub cannot reach the unit. To start it, double-click <b>Start Hub</b> in the project folder
+      (<b>Start Hub (Mac).command</b> or <b>Start Hub (Windows).bat</b>).</p>
+    <p>Or, in a terminal in the project folder:</p>
+    <pre>python ml/run_bench.py --serve</pre>
+    <p>This page reconnects by itself every few seconds.</p>
   </div>
 </div>
 

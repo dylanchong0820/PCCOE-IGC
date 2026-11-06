@@ -233,9 +233,10 @@ main { min-width: 0; outline: none; }
 .stage.live:not(:last-child)::after { background: var(--blue); border-color: var(--blue); }
 
 /* sites */
-.sites-grid { display: grid; grid-template-columns: 1fr 380px; gap: var(--gap); min-height: 560px; }
-.map-wrap { border: 1px solid var(--ink); min-height: 560px; }
-#map { height: 100%; min-height: 560px; background: var(--sheet); }
+.sites-grid { display: grid; grid-template-columns: 1fr 380px; gap: var(--gap); align-items: start; }
+/* the map keeps a screen-sized height and stays in view while the site list scrolls */
+.map-wrap { border: 1px solid var(--ink); position: sticky; top: 24px; height: clamp(420px, calc(100vh - 220px), 760px); }
+#map { height: 100%; background: var(--sheet); }
 .leaflet-container { font-family: var(--font); }
 .leaflet-tile-pane { filter: grayscale(1) contrast(.9) brightness(1.04); }
 .site-pin { width: 18px; height: 18px; background: var(--paper); border: 3px solid var(--ink); }
@@ -303,6 +304,7 @@ main { min-width: 0; outline: none; }
   .stage:nth-child(-n+3) { border-bottom: 1px solid var(--rule); }
   .stage:nth-child(3)::after { display: none; }
   .sites-grid { grid-template-columns: 1fr; }
+  .map-wrap { position: static; height: 420px; }
 }
 @media (max-width: 980px) {
   .app { grid-template-columns: 1fr; }

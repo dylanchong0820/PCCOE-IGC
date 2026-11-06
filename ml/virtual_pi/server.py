@@ -42,14 +42,20 @@ def serve(make_sim, sim, host="127.0.0.1", port=8765, speed=600.0, open_browser=
     site_jobs = SiteJobs()
 
     def run():
+        # The simulation steps in whole ticks (up to 60 s), so keep a running target time instead of
+        # starting from sim.now each loop; otherwise slow speeds would jump a full tick every 0.1 s.
         last = time.monotonic()
+        target, target_sim = None, None
         while not ctl["stop"]:
             time.sleep(0.1)
             now = time.monotonic()
             s = ctl["sim"]
             with s.lock:
+                if target_sim is not s:                  # new site: restart the clock from its start
+                    target, target_sim = s.now, s
+                target += pd.Timedelta(seconds=ctl["speed"] * (now - last))
                 if not s.done:
-                    s.run_until(s.now + pd.Timedelta(seconds=ctl["speed"] * (now - last)))
+                    s.run_until(target)
             last = now
 
     class Handler(BaseHTTPRequestHandler):
