@@ -281,6 +281,28 @@
     $("r-brine").textContent = num(t.brine, 1);
     $("r-salt").textContent = num(S.salt_recovered_g, 1);
     $("clock").textContent = `${hhmm(S.time)} at ${S.site.name}`;
+    renderSoil();
+  }
+
+  function renderSoil() {
+    const so = S.soil;
+    if (!so) return;
+    const pct = (v) => `${Math.max(0, Math.min(100, (v / so.capacity_mm) * 100))}%`;
+    const low = so.water_mm < so.stress_mm;
+    $("soil-card").classList.toggle("low", low);
+    $("soil-mm").textContent = num(so.water_mm, 0);
+    $("soil-fill").style.width = pct(so.water_mm);
+    $("soil-line").style.left = pct(so.stress_mm);
+    $("soil-line-label").style.left = pct(so.stress_mm);
+    $("soil-line-label").textContent = `stress line ${num(so.stress_mm, 0)} mm`;
+    $("soil-sub").textContent = `mm of ${num(so.capacity_mm, 0)} in the root zone`;
+    $("soil-bar").setAttribute("aria-label", `Soil water ${num(so.water_mm, 0)} of ${num(so.capacity_mm, 0)} mm, stress line ${num(so.stress_mm, 0)} mm`);
+    const tr = so.trend_mm_per_h;
+    const move = tr == null ? "Measuring the trend…"
+      : tr > 0.05 ? `Rising · +${num(tr, 1)} mm an hour`
+      : tr < -0.03 ? `Drying · ${num(tr, 2)} mm an hour`
+      : "Steady";
+    $("soil-trend").textContent = low ? `Below the stress line · ${move}` : move;
   }
 
   function friendly(msg) {

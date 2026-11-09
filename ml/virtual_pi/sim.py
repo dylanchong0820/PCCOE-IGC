@@ -9,7 +9,7 @@ import pandas as pd
 import yaml
 
 from predict_today import load_models
-from sedoss_ml import Params, et0_pm, fetch_nasa_power
+from sedoss_ml import Params, et0_pm, fetch_nasa_power, vwc_to_mm
 from sites import get_site, load_index
 
 from .bench import Bench, Sensors, Weather
@@ -210,6 +210,7 @@ class Simulation:
                             "evaporation_trays": round(b.tray_l, 2), "nutrient_a": round(b.stock_a_l, 3),
                             "nutrient_b": round(b.stock_b_l, 3)},
                 "salt_recovered_g": round(b.salt_recovered_g, 1),
+                "soil": self._soil_public(vwc),
                 "fdi_last_batch_ec_dS_m": round(float(np.mean(self.pi.outlet_ec_recent)), 3) if self.pi.outlet_ec_recent else None,
                 "fdi_regenerations": self.nodes["treatment"].regens,
                 "today_plan": self.pi.plan_public(), "delivery_in_progress": self.nodes["dosing"].active,
@@ -225,6 +226,36 @@ class Simulation:
                                      "soil_water_mm": round(b.theta, 1), "stress_threshold_mm": round(P.raw_thr, 1),
                                      "fdi_electrode_load_g": round(b.fdi_load, 2), "buffer_ec_dS_m": round(b.buffer_ec, 3)},
             }
+
+    def _probe_mm(self):
+        sp = self.cfg["soil_probe"]
+        raw = self.sensors.soil_probe_raw()
+        vwc = sp["vwc_dry"] + (raw - sp["raw_dry"]) / (sp["raw_wet"] - sp["raw_dry"]) * (sp["vwc_wet"] - sp["vwc_dry"])
+        return vwc_to_mm(vwc, self.P)
+
+    def _soil_public(self, vwc):
+        """Root-zone water from the probe, plus how fast it moved over the last simulated hour.
+
+        The probe is noisy (a few mm per reading), so the shown value is averaged over about
+        10 simulated minutes, as the unit's firmware would."""
+        last = getattr(self, "_soil_avg", None)
+        if last is None:
+            avg = float(np.mean([self._probe_mm() for _ in range(30)]))
+        else:
+            now_mm = float(np.mean([vwc_to_mm(vwc, self.P)] + [self._probe_mm() for _ in range(9)]))
+            dt = max(0.0, (self.now - last[0]).total_seconds())
+            k = min(1 - np.exp(-dt / 600), 0.3)       # cap so fast clock speeds are still smoothed
+            avg = last[1] + k * (now_mm - last[1])
+        self._soil_avg = (self.now, avg)
+        trend = None
+        hour_ago = self.now - pd.Timedelta(minutes=60)
+        past = [x for x in self.snapshots[-12:] if pd.Timestamp(x["t"]) <= hour_ago]
+        if past:
+            then = past[-1]
+            hrs = (self.now - pd.Timestamp(then["t"])).total_seconds() / 3600
+            trend = round((self.bench.theta - then["soil_water_mm"]) / hrs, 3)
+        return {"water_mm": round(avg, 1), "stress_mm": round(self.P.raw_thr, 1),
+                "capacity_mm": round(self.P.taw, 1), "trend_mm_per_h": trend}
 
     def _delivery_public(self):
         j = self.nodes["dosing"].job
