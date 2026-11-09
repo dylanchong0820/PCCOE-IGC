@@ -62,13 +62,25 @@
           <h2>Unit now</h2>
           <span class="clock" id="clock">—</span>
         </div>
-        <div class="readings" id="readings">
-          <div class="r"><span>Raw water salt</span><b id="r-feed">–</b><small>EC dS/m</small></div>
-          <div class="r"><span>After desalination</span><b id="r-outlet">–</b><small id="r-fdi">EC dS/m</small></div>
-          <div class="r"><span>Irrigation water</span><b id="r-final">–</b><small id="r-final-note">EC dS/m</small></div>
-          <div class="r"><span>Clean water tank</span><b id="r-buffer">–</b><small>litres of 15</small></div>
-          <div class="r"><span>Brine tank</span><b id="r-brine">–</b><small>litres of 15</small></div>
-          <div class="r"><span>Salt recovered</span><b id="r-salt">–</b><small>grams so far</small></div>
+        <div class="unit-panel">
+          <div class="soil-card" id="soil-card">
+            <div class="soil-num"><span>Soil water</span><b id="soil-mm">–</b><small id="soil-sub">mm in the root zone</small></div>
+            <div class="soil-gauge">
+              <div class="soil-bar" role="img" id="soil-bar" aria-label="Soil water gauge">
+                <i class="soil-fill" id="soil-fill"></i><i class="soil-line" id="soil-line"></i>
+              </div>
+              <div class="soil-scale"><span id="soil-line-label">stress line –</span></div>
+              <p class="soil-trend" id="soil-trend">–</p>
+            </div>
+          </div>
+          <div class="readings" id="readings">
+            <div class="r"><span>Raw water salt</span><b id="r-feed">–</b><small>EC dS/m</small></div>
+            <div class="r"><span>After desalination</span><b id="r-outlet">–</b><small id="r-fdi">EC dS/m</small></div>
+            <div class="r"><span>Irrigation water</span><b id="r-final">–</b><small id="r-final-note">EC dS/m</small></div>
+            <div class="r"><span>Clean water tank</span><b id="r-buffer">–</b><small>litres of 15</small></div>
+            <div class="r"><span>Brine tank</span><b id="r-brine">–</b><small>litres of 15</small></div>
+            <div class="r"><span>Salt recovered</span><b id="r-salt">–</b><small>grams so far</small></div>
+          </div>
         </div>
 
         <div class="notice" id="notice" hidden></div>
