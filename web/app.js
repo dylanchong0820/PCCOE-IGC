@@ -116,9 +116,11 @@
     $("rail-site-meta").textContent = `${num(S.site.latitude, 2)}°N ${num(S.site.longitude, 2)}°E`;
     const start = parseT(`${S.replay.start}T00:00:00`), now = parseT(S.time), end = parseT(`${S.replay.end}T00:00:00`);
     const day = Math.floor((now - start) / 86400000) + 1, total = Math.round((end - start) / 86400000) + 1;
-    $("rail-replay").textContent = S.finished
-      ? `Weather replay finished (${total} days)`
-      : `Replaying ${S.replay.start.slice(0, 4)} weather · day ${Math.min(day, total)} of ${total}`;
+    $("rail-replay").textContent = S.replay.live
+      ? `Live clock · ${S.replay.weather_year} weather pattern`
+      : S.finished
+        ? `Weather replay finished (${total} days)`
+        : `Replaying ${S.replay.start.slice(0, 4)} weather · day ${Math.min(day, total)} of ${total}`;
     const sel = $("speed");
     if (document.activeElement !== sel) {
       if (![...sel.options].some((o) => o.value === String(S.speed))) {

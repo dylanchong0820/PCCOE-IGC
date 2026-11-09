@@ -43,8 +43,23 @@ def load_weather(site, start, end):
     return df
 
 
+def shift_weather(wx, start, end):
+    """Weather for real dates [start, end) taken from the same calendar days of an earlier year.
+
+    The saved NASA weather ends a few years back, so a live clock replays the most recent year
+    whose calendar window is fully saved. Returns (weather indexed by the real dates, years back)."""
+    dates = pd.date_range(start.normalize(), end.normalize(), freq="D")
+    for back in range(1, 30):
+        src = dates - pd.DateOffset(years=back)      # 29 Feb maps to 28 Feb
+        if src.isin(wx.index).all():
+            out = wx.loc[src].copy()
+            out.index = dates
+            return out, back
+    raise ValueError("saved weather does not cover a full year for the live clock")
+
+
 class Simulation:
-    def __init__(self, config_path, site_id=None, start=None, days=None):
+    def __init__(self, config_path, site_id=None, start=None, days=None, live=False):
         cfg = yaml.safe_load(Path(config_path).read_text())
         if site_id:
             cfg["site"] = site_id
@@ -57,17 +72,27 @@ class Simulation:
         meta, m_fc, m2 = load_models(ML_DIR / self.site["models_dir"])
         self.P = Params(**meta["params"])
         rp = cfg["replay"]
-        self.start = pd.Timestamp(rp["start"])
-        self.end = self.start + pd.Timedelta(days=rp["days"])
-        self.wx = load_weather(self.site, self.start - pd.Timedelta(days=rp["history_days"] + 1), self.end)
-        missing = pd.date_range(self.start - pd.Timedelta(days=rp["history_days"]), self.end - pd.Timedelta(days=1))
+        self.live = live
+        self.weather_year_back = 0
+        if live:
+            # clock starts at the computer's real time; weather follows the same calendar days of an earlier year
+            self.start = pd.Timestamp.now().floor("s")
+            self.end = self.start.normalize() + pd.Timedelta(days=rp.get("live_days", 365))
+            wx_start = self.start.normalize() - pd.Timedelta(days=rp["history_days"] + 1)
+            saved = load_weather(self.site, wx_start - pd.DateOffset(years=12), self.end)
+            self.wx, self.weather_year_back = shift_weather(saved, wx_start, self.end)
+        else:
+            self.start = pd.Timestamp(rp["start"])
+            self.end = self.start + pd.Timedelta(days=rp["days"])
+            self.wx = load_weather(self.site, self.start - pd.Timedelta(days=rp["history_days"] + 1), self.end)
+        missing = pd.date_range(self.start.normalize() - pd.Timedelta(days=rp["history_days"]), self.end - pd.Timedelta(days=1))
         if not missing.isin(self.wx.index).all():
             raise ValueError(f"weather data does not cover {missing[0].date()}..{missing[-1].date()}")
         self.rng = np.random.default_rng(cfg.get("seed", 0))
         self.log = EventLog()
         self.bench = Bench(cfg, self.P)
         self.sensors = Sensors(self.bench, cfg, self.rng)
-        hist = prefill_history(self.wx, self.start, rp["history_days"], self.rng, cfg["weather_station"])
+        hist = prefill_history(self.wx, self.start.normalize(), rp["history_days"], self.rng, cfg["weather_station"])
         self.pi = Pi5(cfg, meta, m_fc, m2, hist, self.wx, self.rng, self.log)
         self.nodes = {"treatment": Esp32Treatment(cfg, self.log), "dosing": Esp32Dosing(cfg, self.log)}
         self.now = self.start
@@ -76,17 +101,22 @@ class Simulation:
         self._day = None
         self._next_snapshot = self.start
         self.lock = threading.RLock()
-        self.log.add(self.now, "info", "sim", f"Bench simulation started at {self.site['name']} "
-                     f"(weather replay {self.start.date()} to {(self.end - pd.Timedelta(days=1)).date()})")
+        if live:
+            msg = (f"Bench simulation started at {self.site['name']} on the live clock "
+                   f"(weather pattern from {self.start.year - self.weather_year_back}, NASA POWER)")
+        else:
+            msg = (f"Bench simulation started at {self.site['name']} "
+                   f"(weather replay {self.start.date()} to {(self.end - pd.Timedelta(days=1)).date()})")
+        self.log.add(self.now, "info", "sim", msg)
 
     @property
     def done(self):
         return self.now >= self.end
 
     # ---- time stepping ---------------------------------------------------------
-    def step(self):
+    def step(self, max_dt=60):
         dosing = self.nodes["dosing"]
-        dt = 1 if dosing.active or (self.pi.plan and self.now >= self.pi.plan["start"] - pd.Timedelta(minutes=1)) else 60
+        dt = 1 if dosing.active or (self.pi.plan and self.now >= self.pi.plan["start"] - pd.Timedelta(minutes=1)) else max_dt
         now, date = self.now, self.now.normalize()
         if self._day is None or self._day["date"] != date:
             self._close_day()
@@ -109,8 +139,10 @@ class Simulation:
             self._next_snapshot += pd.Timedelta(minutes=10)
 
     def run_until(self, t):
-        while self.now < min(t, self.end):
-            self.step()
+        t = min(t, self.end)
+        while self.now < t:
+            # never step past t, so a real-time clock does not run ahead of the wall clock
+            self.step(max_dt=int(min(60, max(1, (t - self.now).total_seconds()))))
 
     def run(self):
         self.run_until(self.end)
@@ -184,7 +216,9 @@ class Simulation:
                 "delivery": self._delivery_public(),
                 "farmer_overrides_today": {"skip": self.pi.overrides.get("skip") == date,
                                            "water_only": self.pi.overrides.get("water_only") == date},
-                "replay": {"start": str(self.start.date()), "end": str((self.end - pd.Timedelta(days=1)).date())},
+                "replay": {"start": str(self.start.date()), "end": str((self.end - pd.Timedelta(days=1)).date()),
+                           "live": self.live,
+                           "weather_year": (self.now.year - self.weather_year_back) if self.live else self.start.year},
                 "last_decision": self.pi.last_decision, "last_delivery": self.pi.last_delivery,
                 "crop_safe_ec_limit_dS_m": round(self.pi.ec_limit, 2),
                 "simulation_truth": {"_note": "hidden values a real bench cannot measure directly",
