@@ -87,19 +87,22 @@ def main():
     ap.add_argument("--serve", action="store_true", help="run live and serve the website API")
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--port", type=int, default=8765)
-    ap.add_argument("--speed", type=float, default=600, help="--serve: simulated seconds per real second")
+    ap.add_argument("--speed", type=float, default=1, help="--serve: simulated seconds per real second (1 = real time)")
+    ap.add_argument("--replay", action="store_true",
+                    help="--serve: replay the config's weather dates instead of the live clock")
     ap.add_argument("--open", action="store_true", help="--serve: open the hub in the browser")
     args = ap.parse_args()
 
     from virtual_pi.sim import WeatherUnavailable
     try:
-        sim = Simulation(args.config, args.site, args.start, args.days)
+        live = args.serve and not (args.replay or args.start)
+        sim = Simulation(args.config, args.site, args.start, args.days, live=live)
     except WeatherUnavailable as e:
         print(f"\nCould not start the hub: {e}\n")
         sys.exit(1)
     if args.serve:
         from virtual_pi.server import serve
-        serve(lambda site: Simulation(args.config, site, args.start, args.days), sim,
+        serve(lambda site: Simulation(args.config, site, args.start, args.days, live=live), sim,
               args.host, args.port, args.speed, open_browser=args.open)
         return
 

@@ -8,6 +8,7 @@ site: batu_pahat              # trained site whose models and NASA weather the P
 replay:
   start: "2019-01-20"         # weather replay start (dry spell at Batu Pahat, early 2019)
   days: 60
+  live_days: 365              # hub live clock: how many days it can run before the replay ends
   history_days: 14            # weather days the Pi "already logged" before the replay starts
 seed: 7
 
